@@ -23,12 +23,14 @@ where:
 
 _get_cli_options() {
     # Use options from stdin if they are available
-    local cmd
+    local cmd this_dir
     cmd=$1
+    this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
+
     if [[ -p /dev/stdin ]]; then
         echo "$(cat -)"
     else
-        echo "$(cli_options $cmd)"
+        echo "$($this_dir/cli-options $cmd)"
     fi
 }
 
