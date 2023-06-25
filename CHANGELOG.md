@@ -1,4 +1,4 @@
-# Changelog - Khalorg
+# Changelog - fzf-help
 This document describes the changes that were made to the software for each
 version. The changes are described concisely, to make it comprehensible for the
 user. A change is always categorized based on the following types:
@@ -9,3 +9,7 @@ user. A change is always categorized based on the following types:
 code.
 
 # 0.0.0
+- Added `cli-options`.
+- Added `bat-cli-options`.
+- Added `fzf-select-options`.
+- Added "right-bottom-toggle" for the preview window.
