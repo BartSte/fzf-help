@@ -13,7 +13,7 @@
 line options of a given command. The options are retrieved from the command its
 `--help` documentation, which is displayed in a preview window.
 
-## TODO: add demo gif
+![demo](./demo.gif)
 
 # Installation
 Ensure that you have the following tools installed:
