@@ -13,7 +13,7 @@
 line options of a given command. The options are retrieved from the command its
 `--help` documentation, which is displayed in a preview window.
 
-## TODO: add demo gif
+![demo](./demo.gif)
 
 # Installation
 Ensure that you have the following tools installed:
@@ -52,6 +52,11 @@ The following environment variables can be set to configure the behaviour of
   ```
 - `CLI_OPTIONS_REGEX`: regex to match the command line options in the `--help`
     documentation. Check the `cli_options` command for the default value.
+
+- `CLI_OPTIONS_CMD`: controls which command is used to retrieve the command
+    line options. Here, the `$cmd` variable is the command to get the options
+    for. Defaults to `$cmd --help`. You can use `man $cmd` if you want to use
+    the man page instead of the `--help` documentation.
 
 # Usage
 As the demo shows, you can use `fzf-help` by typing `ctrl-a` after typing the
