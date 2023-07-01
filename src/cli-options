@@ -38,6 +38,8 @@ done
 
 cmd=$@
 
+[[ -z $CLI_OPTIONS_CMD ]] && CLI_OPTIONS_CMD="$cmd --help" 
+
 if [[ -z $CLI_OPTIONS_REGEX ]]; then
     HEAD='?<=[^''"`]'
     TAIL='?=\s{2,}|(?<=[^\.])\n| <'
@@ -54,4 +56,4 @@ if [[ -z $CLI_OPTIONS_REGEX ]]; then
     CLI_OPTIONS_REGEX=$re
 fi
 
-$cmd --help | ag --only-matching --numbers -- "$CLI_OPTIONS_REGEX"
+eval $CLI_OPTIONS_CMD | ag --only-matching --numbers -- "$CLI_OPTIONS_REGEX"
