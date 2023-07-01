@@ -2,11 +2,22 @@
 this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 plugin_dir=/usr/share/zsh/plugins/fzf-help
 
-echo "Deleting old $plugin_dir"
-rm -r $plugin_dir 2>/dev/null || echo "No old installation found."
+if [[ -d $plugin_dir ]]; then
+    echo "Found old installation at $plugin_dir"
+    echo "Deleting old installation..."
+    sudo rm -rf $plugin_dir || {
+        echo 'installation aborted'
+        exit 0
+    }
+fi
 
 echo "Copying fzf-help to $plugin_dir"
-mkdir $plugin_dir
-cp $this_dir/src/* $plugin_dir
-
+sudo mkdir $plugin_dir || {
+    echo 'installation aborted'
+    exit 0
+}
+sudo cp $this_dir/src/* $plugin_dir || {
+    echo 'installation aborted'
+    exit 0
+}
 echo 'Installation complete.'

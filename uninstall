@@ -2,7 +2,15 @@
 this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 plugin_dir=/usr/share/zsh/plugins/fzf-help
 
-echo "Deleting old installation at: $plugin_dir"
-rm -r $plugin_dir 2>/dev/null || echo "No old installation found."
+if [[ -d $plugin_dir ]]; then
+    echo "Deleting old installation at: $plugin_dir"
+    sudo rm -rf $plugin_dir || {
+        echo 'Failed to delete old installation.'
+        exit 1
+    }
+else
+    echo 'fzf-help is not installed.'
+    exit 0
+fi
 
 echo 'Uninstall complete.'
