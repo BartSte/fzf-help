@@ -65,10 +65,9 @@ get_half_page() {
 cmd="$1"
 option="$2" 
 
-[ -z $BAT_CLI_OPTION_THEME ] && BAT_CLI_OPTION_THEME="Dracula"
 [[ -z $CLI_OPTIONS_CMD ]] && CLI_OPTIONS_CMD="$1 --help"
 
 line_number=$(_get_cli_options $cmd | get_line_number $option)
 scroll=$(get_scroll_lines $line_number)
 printf '\033[2J'
-eval $CLI_OPTIONS_CMD | bat -f -p -H $line_number -r $scroll: --theme Dracula;
+eval $CLI_OPTIONS_CMD | bat -f -p -H $line_number -r $scroll:
