@@ -8,7 +8,15 @@ user. A change is always categorized based on the following types:
 - Task: a change is made to the repository that has no effect on the source
 code.
 
-# 0.0.0
+# 0.2
+- Added syntax highlighting for `bat-cli-options`.
+
+# 0.1
+- Added `$CLI_OPTIONS_CMD`.
+- Bugfix: shebangs were not compatible with macos
+- Bugfix: LBUFFER was used instead of BUFFER in `fzf-help.zsh`
+
+# 0.0
 - Added `cli-options`.
 - Added `bat-cli-options`.
 - Added `fzf-select-options`.
