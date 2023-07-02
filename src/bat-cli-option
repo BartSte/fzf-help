@@ -70,4 +70,4 @@ option="$2"
 line_number=$(_get_cli_options $cmd | get_line_number $option)
 scroll=$(get_scroll_lines $line_number)
 printf '\033[2J'
-eval $CLI_OPTIONS_CMD | bat -f -p -H $line_number -r $scroll:
+eval $CLI_OPTIONS_CMD | bat -f -p -H $line_number -r $scroll: --language=help
