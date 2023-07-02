@@ -66,7 +66,9 @@ again to toggle the preview window to the bottom or the right of the widget.
 
 # Troubleshooting
 If you encounter any issues, please report them on the issue tracker at:
-[fzf-help issues](https://github.com/BartSte/fzf-help/issues)
+[fzf-help issues](https://github.com/BartSte/fzf-help/issues). 
+
+Please note that `fzf-help` is tested on Linux (Arch Linux) only.
 
 ## Contributing
 Contributions are welcome! Please see [CONTRIBUTING](./CONTRIBUTING.md) for
