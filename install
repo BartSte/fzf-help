@@ -1,23 +1,19 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 plugin_dir=/usr/share/zsh/plugins/fzf-help
+
+abort() {
+    echo 'installation aborted'
+    exit 0
+}
 
 if [[ -d $plugin_dir ]]; then
     echo "Found old installation at $plugin_dir"
     echo "Deleting old installation..."
-    sudo rm -rf $plugin_dir || {
-        echo 'installation aborted'
-        exit 0
-    }
+    sudo rm -rf $plugin_dir || abort
 fi
 
 echo "Copying fzf-help to $plugin_dir"
-sudo mkdir $plugin_dir || {
-    echo 'installation aborted'
-    exit 0
-}
-sudo cp $this_dir/src/* $plugin_dir || {
-    echo 'installation aborted'
-    exit 0
-}
+sudo mkdir $plugin_dir || abort
+sudo cp $this_dir/src/* $plugin_dir || abort
 echo 'Installation complete.'
