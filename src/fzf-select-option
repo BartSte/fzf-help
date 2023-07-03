@@ -20,7 +20,7 @@ _get_command() {
 }
 
 _remove_line_number() {
-    sed "s/^.*://g"
+    sed "s/^.*:/ /g"
 }
 
 options=$(getopt -o h --long help -- "$@")
@@ -63,4 +63,5 @@ opts="$($this_dir/cli-options $cmd)"
 echo "$opts" | _remove_line_number |
 fzf --prompt="$buffer" \
     --preview "echo \"$opts\" | $this_dir/bat-cli-option \"$cmd\" {}; [ {q} ];" \
-    $FZF_HELP_OPTS
+    $FZF_HELP_OPTS |
+    tr -d '\n'
