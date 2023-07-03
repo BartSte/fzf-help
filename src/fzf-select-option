@@ -50,7 +50,7 @@ fi
 [ $# -eq 0 ] && [ -z "$buffer" ] && { echo "$usage"; exit ;}
 
 if [[ -z $FZF_HELP_OPTS ]]; then
-    FZF_HELP_OPTS="--preview-window=right,75%,nowrap --height 80% "
+    FZF_HELP_OPTS="--multi --preview-window=right,75%,nowrap --height 80% "
     FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
 fi
 
