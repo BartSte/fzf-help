@@ -26,7 +26,7 @@ at `/usr/share/zsh/plugins`.
 ```bash
 tmp_dir=$(mktemp -d);
 git clone https://github.com/BartSte/fzf-help.git $tmp_dir;
-sudo $tmp_dir/install;
+$tmp_dir/install;
 rm -rf $tmp_dir;
 ```
 
