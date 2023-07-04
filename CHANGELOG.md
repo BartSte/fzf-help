@@ -8,6 +8,9 @@ user. A change is always categorized based on the following types:
 - Task: a change is made to the repository that has no effect on the source
 code.
 
+# 0.3
+- Added the `--multi` option to fzf
+
 # 0.2
 - Added syntax highlighting for `bat-cli-options`.
 

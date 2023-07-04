@@ -33,10 +33,8 @@ rm -rf $tmp_dir;
 After installation, add the following line to your `.zshrc` file:
 ```bash
 source /usr/share/zsh/plugins/fzf-help/fzf-help.zsh
-
 zle -N fzf-help-widget
-bindkey -M vicmd "^A" fzf-help-widget
-bindkey -M viins "^A" fzf-help-widget
+bindkey "^A" fzf-help-widget
 ```
 which will bind the `fzf-help-widget` to the `ctrl-a`, which you should trigger
 after typing the command you want to get help for.
