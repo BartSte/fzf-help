@@ -12,7 +12,7 @@
 `fzf-help` is an `fzf` extension that allows you to select one of the command
 line options of a given command. The options are retrieved from the command its
 `--help` documentation, which is displayed in a preview window. Both zsh and
-bash are supported.
+bash are supported. Tested on Linux, but should work on MacOS as well.
 
 ![demo](./demo.gif)
 
@@ -84,7 +84,7 @@ again to toggle the preview window to the bottom or the right of the widget.
 If you encounter any issues, please report them on the issue tracker at:
 [fzf-help issues](https://github.com/BartSte/fzf-help/issues). 
 
-Please note that `fzf-help` is tested on Linux (Arch Linux) only.
+Please note that `fzf-help` is tested on Linux only.
 
 ## Contributing
 Contributions are welcome! Please see [CONTRIBUTING](./CONTRIBUTING.md) for
