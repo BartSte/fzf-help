@@ -23,22 +23,12 @@ Ensure that you have the following tools installed:
 - [ag](www.github.com/ggreer/the_silver_searcher)
 
 ## zsh
-Next, run the following command to install fzf-help in the zsh plugin directory
+Run the following command to install fzf-help in the zsh plugin directory
 at `/usr/share/zsh/plugins`.
 ```bash
 tmp_dir=$(mktemp -d);
 git clone https://github.com/BartSte/fzf-help.git $tmp_dir;
 $tmp_dir/install;
-rm -rf $tmp_dir;
-```
-
-## bash
-Next, run the following command to install fzf-help in the bash plugin directory
-at `/usr/share/fzf-help`.
-```bash
-tmp_dir=$(mktemp -d);
-git clone https://github.com/BartSte/fzf-help.git $tmp_dir;
-$tmp_dir/install --bash;
 rm -rf $tmp_dir;
 ```
 
@@ -51,7 +41,17 @@ bindkey "^A" fzf-help-widget
 which will bind the `fzf-help-widget` to the `ctrl-a`, which you should trigger
 after typing the command you want to get help for.
 
-If you are using bash, you can add the following line to your `.bashrc` file:
+## bash
+Run the following command to install fzf-help in the bash plugin directory
+at `/usr/share/fzf-help`.
+```bash
+tmp_dir=$(mktemp -d);
+git clone https://github.com/BartSte/fzf-help.git $tmp_dir;
+$tmp_dir/install --bash;
+rm -rf $tmp_dir;
+```
+
+After installation, you can add the following line to your `.bashrc` file:
 ```bash
 source /usr/share/zsh/plugins/fzf-help/fzf-help.bash
 bind -x '"\C-a": fzf-help-widget'
