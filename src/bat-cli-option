@@ -7,7 +7,10 @@ with the help message. The list of available options can be supplied via
 stdin if possible, else <cmd> --help and a regex is used to extract the options.
 
 The theme used by bat can be overridden by setting the BAT_CLI_OPTION_THEME 
-environment variable.
+environment variable. By setting the CLI_OPTIONS_CMD environment variable, the
+command used to get the list of options can be overridden. For example, if you
+want to use the man page of <cmd> instead of <cmd> --help, you can set
+CLI_OPTIONS_CMD to 'man $cmd'.
 
 where:
     options:
