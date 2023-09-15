@@ -1,24 +1,35 @@
 #!/usr/bin/env bash
 
-usage="Usage: $(basename "$0") [-h | --help] <command> <option>
+usage="Usage: $(basename "$0") [-h | --help] <cmd> <index>
 
-Uses bat to display the help message of <command> where the <option> is highlighted
-with the help message. The list of available options can be supplied via 
-stdin if possible, else <command> --help and a regex is used to extract the options.
+Uses bat to display the help message of <cmd> where the <index> is
+the index of the option to highlight in the help message. The <index>
+corresponds to the {n} placeholder by fzf. The list of available options can be
+supplied via stdin if possible, else <cmd> --help and a
+regex is used to extract the options. When supplying the options via stdin, 
+ensure that the options are presented as follows:
+
+    line_number:option1
+    line_number:option2
+    line_number:option3
+
+Where <index> is used to get the line number. This key-value pair corresponds
+to the output of the 'ag --only-matching --numbers' cmd.
 
 The theme used by bat can be overridden by setting the BAT_CLI_OPTION_THEME 
-environment variable. By setting the CLI_OPTIONS_CMD environment variable, the
-command used to get the list of options can be overridden. For example, if you
-want to use the man page of <cmd> instead of <cmd> --help, you can set
-CLI_OPTIONS_CMD to 'man $cmd'.
+environment variable. The cmd used to generate the --help message can be
+changed by setting the CLI_OPTIONS_CMD environment variable. For example, to
+use the man instead of --help you can set:
+
+    export CLI_OPTIONS_CMD='man \$cmd'
 
 where:
     options:
     -h --help   shows this help messages
 
     positional:
-    <command>   an existing command
-    <option>    an option of <command>"
+    <cmd>   an existing command
+    <index>    an option of <cmd>"
 
 parse_args() {
     while [[ $# -gt 0 ]]; do
@@ -28,10 +39,10 @@ parse_args() {
                 exit 0
                 ;;
             *)
-                if [[ -z $command ]]; then
-                    command="$1"
-                elif [[ -z $option ]]; then
-                    option="$1"
+                if [[ -z $cmd ]]; then
+                    cmd="$1"
+                elif [[ -z $index ]]; then
+                    index="$1"
                 else
                     echo "Unknown argument: $1"
                     echo "$usage"
@@ -43,7 +54,13 @@ parse_args() {
     done
 }
 
-_get_cli_options() {
+#######################################
+# Returns the cli options for <cmd> where the options are presetented as
+# line:option pairs that are separated by a newline. If the options are
+# provided via stdin, then they are used, else `cli-options <cmd>` is used
+# to get the options.
+#######################################
+get_cli_options() {
     # Use options from stdin if they are available
     local command this_dir
     command=$1
@@ -52,14 +69,18 @@ _get_cli_options() {
     if [[ -p /dev/stdin ]]; then
         echo "$(cat -)"
     else
-        echo "$($this_dir/cli-options $command)"
+        echo "$($this_dir/cli-options $cmd)"
     fi
 }
 
+#######################################
+# From the line_number:option pairs, returns the line number for the option
+# using the <index>.
+#######################################
 get_line_number() {
-    local line_number line_number_and_word
-    line_number_and_word="$1"
-    line_number=$(ag -Q -- "$line_number_and_word" | head -1 | sed "s/:.*$//g")
+    local index line_number 
+    index=$(($1+1))
+    line_number=$(head -n $index | tail -1 | sed "s/:.*$//g")
     [ -z $line_number ] && line_number=0
     echo "$line_number"
 }
@@ -86,11 +107,11 @@ get_half_page() {
 
 parse_args "$@"
 
-[[ -z $command ]] && echo "Missing <command>" && echo "$usage" && exit 1
-[[ -z $option ]] && echo "Missing <option>" && echo "$usage" && exit 1
-[[ -z $CLI_OPTIONS_CMD ]] && CLI_OPTIONS_CMD="$command --help"
+[[ -z $cmd ]] && echo "Missing <cmd>" && echo "$usage" && exit 1
+[[ -z $index ]] && echo "Missing <index>" && echo "$usage" && exit 1
+[[ -z $CLI_OPTIONS_CMD ]] && CLI_OPTIONS_CMD="$cmd --help"
 
-line_number=$(_get_cli_options $command | get_line_number $option)
+line_number=$(get_cli_options $cmd | get_line_number $index)
 scroll=$(get_scroll_lines $line_number)
 printf '\033[2J'
 eval $CLI_OPTIONS_CMD | bat -f -p -H $line_number -r $scroll: --language=help
