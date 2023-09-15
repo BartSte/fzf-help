@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-usage="Usage: $(basename "$0") [-h | --help] <cmd> <option>
+usage="Usage: $(basename "$0") [-h | --help] <command> <option>
 
-Uses bat to display the help message of <cmd> where the <option> is highlighted
+Uses bat to display the help message of <command> where the <option> is highlighted
 with the help message. The list of available options can be supplied via 
-stdin if possible, else <cmd> --help and a regex is used to extract the options.
+stdin if possible, else <command> --help and a regex is used to extract the options.
 
 The theme used by bat can be overridden by setting the BAT_CLI_OPTION_THEME 
 environment variable. By setting the CLI_OPTIONS_CMD environment variable, the
@@ -17,23 +17,42 @@ where:
     -h --help   shows this help messages
 
     positional:
-    <cmd>   an existing command
-    <option>    an option of <cmd>"
+    <command>   an existing command
+    <option>    an option of <command>"
 
-[ $# -eq 0 ] && { echo "$usage"; exit ;}
-[ $# -eq 1 ] && { echo "Missing <option>"; exit ; } 
-[ $1 == "-h" ] || [ $1 == "--help" ] && { echo "$usage"; exit ;}
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h|--help)
+                echo "$usage"
+                exit 0
+                ;;
+            *)
+                if [[ -z $command ]]; then
+                    command="$1"
+                elif [[ -z $option ]]; then
+                    option="$1"
+                else
+                    echo "Unknown argument: $1"
+                    echo "$usage"
+                    exit 1
+                fi
+                ;;
+        esac
+        shift
+    done
+}
 
 _get_cli_options() {
     # Use options from stdin if they are available
-    local cmd this_dir
-    cmd=$1
+    local command this_dir
+    command=$1
     this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 
     if [[ -p /dev/stdin ]]; then
         echo "$(cat -)"
     else
-        echo "$($this_dir/cli-options $cmd)"
+        echo "$($this_dir/cli-options $command)"
     fi
 }
 
@@ -65,12 +84,13 @@ get_half_page() {
     echo $(($number_of_lines / 2))
 }
 
-cmd="$1"
-option="$2" 
+parse_args "$@"
 
-[[ -z $CLI_OPTIONS_CMD ]] && CLI_OPTIONS_CMD="$1 --help"
+[[ -z $command ]] && echo "Missing <command>" && echo "$usage" && exit 1
+[[ -z $option ]] && echo "Missing <option>" && echo "$usage" && exit 1
+[[ -z $CLI_OPTIONS_CMD ]] && CLI_OPTIONS_CMD="$command --help"
 
-line_number=$(_get_cli_options $cmd | get_line_number $option)
+line_number=$(_get_cli_options $command | get_line_number $option)
 scroll=$(get_scroll_lines $line_number)
 printf '\033[2J'
 eval $CLI_OPTIONS_CMD | bat -f -p -H $line_number -r $scroll: --language=help
