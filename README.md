@@ -94,5 +94,9 @@ more information.
 Distributed under the [MIT License](./LICENCE).
 
 # Improvements
-- [ ] The `CLI_OPTIONS_REGEX` could be improved as occasionally it will miss
-some options.
+- [ ] `cli-options "git stash"` gives some wrong results.
+- [ ] `src/fzf-select-option "git stash"` gives the following error:
+  ```
+  src/fzf-select-option: line 58: [: git: binary operator expected
+  ```
+

@@ -41,19 +41,12 @@ cmd=$@
 [[ -z $CLI_OPTIONS_CMD ]] && CLI_OPTIONS_CMD="$cmd --help" 
 
 if [[ -z $CLI_OPTIONS_REGEX ]]; then
-    HEAD='?<=[^''"`]'
-    TAIL='?=\s{2,}|(?<=[^\.])\n| <'
-    OBLIGATORY_CHARS='--'
-    ALLOWED_SYMBOLS='\[\]\-\=\.\,\%'
-    ALLOWED_LETTERS_AND_NUMBERS='a-zA-Z0-9'
+    PREFIX='(?<=[^\-])(--)'
+    HEAD='a-zA-Z0-9\['
+    MIDDLE='a-zA-Z0-9\[\]\-\=\.\,\%'
+    TAIL='a-zA-Z0-9'
 
-    re="($HEAD)"
-    re+="($OBLIGATORY_CHARS)"
-    re+="([$ALLOWED_LETTERS_AND_NUMBERS]+"
-    re+="[$ALLOWED_LETTERS_AND_NUMBERS$ALLOWED_SYMBOLS]*)"
-    re+="($TAIL)"
-    
-    CLI_OPTIONS_REGEX=$re
+    CLI_OPTIONS_REGEX="($PREFIX)([$HEAD]+[$MIDDLE]*[$TAIL]+)"
 fi
 
 eval $CLI_OPTIONS_CMD | ag --only-matching --numbers -- "$CLI_OPTIONS_REGEX"
