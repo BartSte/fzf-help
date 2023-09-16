@@ -50,17 +50,19 @@ fi
 [ $# -eq 0 ] && [ -z "$buffer" ] && { echo "$usage"; exit ;}
 
 if [[ -z $FZF_HELP_OPTS ]]; then
-    FZF_HELP_OPTS="--multi --preview-window=right,75%,nowrap --height 80% "
-    FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
+    FZF_HELP_OPTS="--multi --preview-window=right,50%,nowrap --height 80% "
+    FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,50%,nowrap|right,50%,nowrap)"
 fi
 
 cmd=$(echo $buffer | _get_command)
 [[ -z $cmd ]] && exit 1
 
 this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
-opts="$($this_dir/cli-options $cmd)"
+help_msg='/tmp/fzf-select-option-help-msg.help'
+$this_dir/help-message $cmd > $help_msg
+opts="$(cat $help_msg | $this_dir/cli-options)"
 
 echo "$opts" | _remove_line_number |
 fzf --prompt="$buffer" \
-    --preview "echo \"$opts\" | $this_dir/bat-cli-option \"$cmd\" {n};" \
+    --preview "$this_dir/bat-cli-option \"$help_msg\" \"$opts\" {n}" \
     $FZF_HELP_OPTS

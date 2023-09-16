@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+usage="Usage: $(basename "$0") [-h | --help] <cmd>
+
+Evaluates the CLI_OPTIONS_CMD environment variable. If it is not set, then
+<cmd> --help is used. You can use the <cmd> variable in the CLI_OPTIONS_CMD 
+by using \$cmd as a placeholder for the command. For example:
+
+export CLI_OPTIONS_CMD='\$cmd --help'
+
+where:
+    options:
+    -h --help   shows this help messages
+
+    positional:
+    <cmd>   an existing command"
+
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h|--help)
+                echo "$usage"
+                exit 0
+                ;;
+            *)
+                if [[ -z $cmd ]]; then
+                    cmd="$1"
+                else
+                    echo "Unknown argument: $1"
+                    echo "$usage"
+                    exit 1
+                fi
+                ;;
+        esac
+        shift
+    done
+}
+
+cmd=''
+parse_args "$@"
+
+[[ $CLI_OPTIONS_CMD ]] || CLI_OPTIONS_CMD="$cmd --help" 
+
+eval $CLI_OPTIONS_CMD

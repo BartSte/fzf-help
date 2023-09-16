@@ -1,35 +1,27 @@
-#!/usr/bin/env bash
+!/usr/bin/env bash
 
-usage="Usage: $(basename "$0") [-h | --help] <cmd> <index>
+usage="Usage: $(basename "$0") [-h | --help] <msg> <opts> <index>
 
-Uses bat to display the help message of <cmd> where the <index> is
-the index of the option to highlight in the help message. The <index>
-corresponds to the {n} placeholder by fzf. The list of available options can be
-supplied via stdin if possible, else <cmd> --help and a
-regex is used to extract the options. When supplying the options via stdin, 
-ensure that the options are presented as follows:
+Uses bat to display the help message <msg>. The command line options are
+provided as argument <optc>, where the nth value (<index>) of these options is
+highlighted in the help message. 
+
+The options must be provided in the following format:
 
     line_number:option1
     line_number:option2
     line_number:option3
 
-Where <index> is used to get the line number. This key-value pair corresponds
-to the output of the 'ag --only-matching --numbers' cmd.
-
-The theme used by bat can be overridden by setting the BAT_CLI_OPTION_THEME 
-environment variable. The cmd used to generate the --help message can be
-changed by setting the CLI_OPTIONS_CMD environment variable. For example, to
-use the man instead of --help you can set:
-
-    export CLI_OPTIONS_CMD='man \$cmd'
+Where <index> is used to get the line-option pair. This format corresponds to
+the output of the 'ag --only-matching --numbers' command.
 
 where:
     options:
     -h --help   shows this help messages
 
     positional:
-    <cmd>   an existing command
-    <index>    an option of <cmd>"
+    <opts>  the command line options
+    <index> the index of the option to highlight"
 
 parse_args() {
     while [[ $# -gt 0 ]]; do
@@ -39,8 +31,10 @@ parse_args() {
                 exit 0
                 ;;
             *)
-                if [[ -z $cmd ]]; then
-                    cmd="$1"
+                if [[ -z $msg ]]; then
+                    msg="$1"
+                elif [[ -z $opts ]]; then
+                    opts="$1"
                 elif [[ -z $index ]]; then
                     index="$1"
                 else
@@ -55,32 +49,14 @@ parse_args() {
 }
 
 #######################################
-# Returns the cli options for <cmd> where the options are presetented as
-# line:option pairs that are separated by a newline. If the options are
-# provided via stdin, then they are used, else `cli-options <cmd>` is used
-# to get the options.
-#######################################
-get_cli_options() {
-    # Use options from stdin if they are available
-    local command this_dir
-    command=$1
-    this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
-
-    if [[ -p /dev/stdin ]]; then
-        echo "$(cat -)"
-    else
-        echo "$($this_dir/cli-options $cmd)"
-    fi
-}
-
-#######################################
 # From the line_number:option pairs, returns the line number for the option
 # using the <index>.
 #######################################
 get_line_number() {
-    local index line_number 
-    index=$(($1+1))
-    line_number=$(head -n $index | tail -1 | sed "s/:.*$//g")
+    local opts index line_number
+    opts=$1
+    index=$2
+    line_number=$(echo "$opts" | head -n $(($index+1)) | tail -1 | sed "s/:.*$//g")
     [ -z $line_number ] && line_number=0
     echo "$line_number"
 }
@@ -107,11 +83,11 @@ get_half_page() {
 
 parse_args "$@"
 
-[[ -z $cmd ]] && echo "Missing <cmd>" && echo "$usage" && exit 1
+[[ -z $msg ]] && echo "Missing <msg>" && echo "$usage" && exit 1
+[[ -z $opts ]] && echo "Missing <opts>" && echo "$usage" && exit 1
 [[ -z $index ]] && echo "Missing <index>" && echo "$usage" && exit 1
-[[ -z $CLI_OPTIONS_CMD ]] && CLI_OPTIONS_CMD="$cmd --help"
 
-line_number=$(get_cli_options $cmd | get_line_number $index)
+line_number=$(get_line_number "$opts" $index)
 scroll=$(get_scroll_lines $line_number)
 printf '\033[2J'
-eval $CLI_OPTIONS_CMD | bat -f -p -H $line_number -r $scroll: --language=help
+bat -f -pp -H $line_number -r $scroll: --language=help $msg

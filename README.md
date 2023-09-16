@@ -94,9 +94,4 @@ more information.
 Distributed under the [MIT License](./LICENCE).
 
 # Improvements
-- [ ] `cli-options "git stash"` gives some wrong results.
-- [ ] `src/fzf-select-option "git stash"` gives the following error:
-  ```
-  src/fzf-select-option: line 58: [: git: binary operator expected
-  ```
-
+- [ ] Refactor needed after fixing bug

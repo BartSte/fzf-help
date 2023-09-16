@@ -1,57 +1,49 @@
 #!/usr/bin/env bash
 
-usage="Usage: $(basename "$0") [-h | --help] <cmd>
+usage="Usage: $(basename "$0") [-h | --help]
 
-Returns the positional command line arguments for <cmd>. Only long (--arg)
-optional arguments are supported.
-
-The regex used to extract the options can be overridden by setting the 
-CLI_OPTIONS_REGEX environment variable.
+Returns the positional command line arguments that are present in stdin. The
+options are extracted using the regex provided by the CLI_OPTIONS_REGEX
+environment variable. If the regex is not provided, then the default regex is
+used.
 
 where:
     options:
-    -h --help   shows this help messages
+    -h --help   shows this help messages"
 
-    positional:
-    <cmd>   an existing command"
-
-options=$(getopt -o h --long help -- "$@")
-
-[ $? -eq 0 ] || { echo "Incorrect options provided"; exit 1; }
-
-eval set -- "$options"
-while true; do
-    case "$1" in
-    -h | --help)
-        echo "$usage"
-        exit
-        ;;
-    --)
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h|--help)
+                echo "$usage"
+                exit 0
+                ;;
+            *)
+                echo "Unknown argument: $1"
+                echo "$usage"
+                exit 1
+                ;;
+        esac
         shift
-        break
-        ;;
-    esac
-    shift
-done
+    done
+}
 
-[ $# -eq 0 ] && { echo "$usage"; exit ;}
+get_regex() {
+    if [[ -z $CLI_OPTIONS_REGEX ]]; then
+        PREFIX='(?<=[^\-])(--)'
+        HEAD='a-zA-Z0-9\['
+        MIDDLE='a-zA-Z0-9\[\]\-\=\.\,\%'
+        TAIL='a-zA-Z0-9'
+        LONG="($PREFIX)([$HEAD]+[$MIDDLE]*[$TAIL]+)"
 
-cmd=$@
+        PREFIX='(?<=[^\-a-zA-Z0-9])(-)'
+        TAIL='[a-zA-Z]{1}'
+        SHORT="($PREFIX)($TAIL)"
 
-[[ -z $CLI_OPTIONS_CMD ]] && CLI_OPTIONS_CMD="$cmd --help" 
+        CLI_OPTIONS_REGEX="$LONG|$SHORT"
+    fi
+    echo "$CLI_OPTIONS_REGEX"
+}
 
-if [[ -z $CLI_OPTIONS_REGEX ]]; then
-    PREFIX='(?<=[^\-])(--)'
-    HEAD='a-zA-Z0-9\['
-    MIDDLE='a-zA-Z0-9\[\]\-\=\.\,\%'
-    TAIL='a-zA-Z0-9'
-    LONG="($PREFIX)([$HEAD]+[$MIDDLE]*[$TAIL]+)"
-
-    PREFIX='(?<=[^\-a-zA-Z0-9])(-)'
-    TAIL='[a-zA-Z]{1}'
-    SHORT="($PREFIX)($TAIL)"
-    
-    CLI_OPTIONS_REGEX="$LONG|$SHORT"
-fi
-
-eval $CLI_OPTIONS_CMD | ag --only-matching --numbers -- "$CLI_OPTIONS_REGEX"
+parse_args "$@"
+ag --only-matching --numbers -- "$(get_regex)"
