@@ -45,8 +45,13 @@ if [[ -z $CLI_OPTIONS_REGEX ]]; then
     HEAD='a-zA-Z0-9\['
     MIDDLE='a-zA-Z0-9\[\]\-\=\.\,\%'
     TAIL='a-zA-Z0-9'
+    LONG="($PREFIX)([$HEAD]+[$MIDDLE]*[$TAIL]+)"
 
-    CLI_OPTIONS_REGEX="($PREFIX)([$HEAD]+[$MIDDLE]*[$TAIL]+)"
+    PREFIX='(?<=[^\-a-zA-Z0-9])(-)'
+    TAIL='[a-zA-Z]{1}'
+    SHORT="($PREFIX)($TAIL)"
+    
+    CLI_OPTIONS_REGEX="$LONG|$SHORT"
 fi
 
 eval $CLI_OPTIONS_CMD | ag --only-matching --numbers -- "$CLI_OPTIONS_REGEX"
