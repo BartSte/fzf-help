@@ -96,3 +96,5 @@ Distributed under the [MIT License](./LICENCE).
 # Improvements
 - [ ] For `git stash` the lines are not wrapped nicely
 - [ ] Refactor needed after fixing bug
+  - [ ] bat-cli-options
+  - [ ] fzf-select-option

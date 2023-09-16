@@ -1,9 +1,9 @@
-!/usr/bin/env bash
+#!/usr/bin/env bash
 
 usage="Usage: $(basename "$0") [-h | --help] <msg> <opts> <index>
 
 Uses bat to display the help message <msg>. The command line options are
-provided as argument <optc>, where the nth value (<index>) of these options is
+provided as argument <opts>, where the nth value (<index>) of these options is
 highlighted in the help message. 
 
 The options must be provided in the following format:
