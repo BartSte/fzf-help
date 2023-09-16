@@ -55,7 +55,7 @@ if [[ -z $FZF_HELP_OPTS ]]; then
 fi
 
 cmd=$(echo $buffer | _get_command)
-[ -z $cmd ] && exit 1
+[[ -z $cmd ]] && exit 1
 
 this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 opts="$($this_dir/cli-options $cmd)"
