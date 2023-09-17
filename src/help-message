@@ -2,11 +2,11 @@
 
 usage="Usage: $(basename "$0") [-h | --help] <cmd>
 
-Evaluates the CLI_OPTIONS_CMD environment variable. If it is not set, then
-<cmd> --help is used. You can use the <cmd> variable in the CLI_OPTIONS_CMD 
+Evaluates the HELP_MESSAGE_CMD environment variable. If it is not set, then
+<cmd> --help is used. You can use the <cmd> variable in the HELP_MESSAGE_CMD 
 by using \$cmd as a placeholder for the command. For example:
 
-export CLI_OPTIONS_CMD='\$cmd --help'
+export HELP_MESSAGE_CMD='\$cmd --help'
 
 where:
     options:
@@ -39,6 +39,6 @@ parse_args() {
 parse_args "$@"
 
 [[ $cmd ]] || { echo "Missing <cmd> argument"; echo "$usage"; exit 1; }
-[[ $CLI_OPTIONS_CMD ]] || CLI_OPTIONS_CMD="$cmd --help" 
+[[ $HELP_MESSAGE_CMD ]] || HELP_MESSAGE_CMD="$cmd --help" 
 
-eval $CLI_OPTIONS_CMD || exit 1
+eval $HELP_MESSAGE_CMD || exit 1

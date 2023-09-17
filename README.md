@@ -69,7 +69,7 @@ The following environment variables can be set to configure the behaviour of
 - `CLI_OPTIONS_REGEX`: regex to match the command line options in the `--help`
     documentation. Check the `cli_options` command for the default value.
 
-- `CLI_OPTIONS_CMD`: controls which command is used to retrieve the command
+- `HELP_MESSAGE_CMD`: controls which command is used to retrieve the command
     line options. Here, the `$cmd` variable is the command to get the options
     for. Defaults to `$cmd --help`. You can use `man $cmd` if you want to use
     the man page instead of the `--help` documentation.
@@ -94,4 +94,5 @@ more information.
 Distributed under the [MIT License](./LICENCE).
 
 # Improvements
-- [ ] CLI_OPTIONS_CMD='man $cmd' does not work
+- [ ] HELP_MESSAGE_CMD='man $cmd' does not work
+- [ ] fzf-help-widget does not work for "cd" and "man"
