@@ -41,4 +41,4 @@ parse_args "$@"
 [[ $cmd ]] || { echo "Missing <cmd> argument"; echo "$usage"; exit 1; }
 [[ $CLI_OPTIONS_CMD ]] || CLI_OPTIONS_CMD="$cmd --help" 
 
-eval $CLI_OPTIONS_CMD
+eval $CLI_OPTIONS_CMD || exit 1

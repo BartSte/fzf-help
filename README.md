@@ -63,7 +63,7 @@ The following environment variables can be set to configure the behaviour of
 - `FZF_HELP_OPTS`: options to pass to `fzf` when selecting the command to get
   help for. Defaults to:
   ```bash
-  FZF_HELP_OPTS="--preview-window=right,75%,nowrap --height 80% "
+  FZF_HELP_OPTS="--preview-window=right,75%,wrap --height 80% "
   FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
   ```
 - `CLI_OPTIONS_REGEX`: regex to match the command line options in the `--help`
@@ -94,7 +94,4 @@ more information.
 Distributed under the [MIT License](./LICENCE).
 
 # Improvements
-- [ ] For `git stash` the lines are not wrapped nicely
-- [ ] Refactor needed after fixing bug
-  - [ ] bat-cli-options
-  - [ ] fzf-select-option
+- [ ] CLI_OPTIONS_CMD='man $cmd' does not work
