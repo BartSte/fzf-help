@@ -3,10 +3,15 @@
 usage="Usage: $(basename "$0") [-h | --help] <cmd>
 
 Displays the cli options for <cmd> using fzf, allowing the user to select one
-of them. In the preview window, the selected option is highlighted and the help
-message for the option is displayed.
+of them. The options is send to stdout when it is accepted. In the preview
+window, the selected option is highlighted and the help message for the option
+is displayed. 
 
-The <cmd> can also be provided via stdin.
+The <cmd> can also be provided via stdin. The <cmd> can also containt options
+which will be stripped. For example, \`rm -rf\` will be treated as \`rm\`.
+
+This program is intended to be used with the fzf-select-command program as the
+function used for the fzf --preview option.
 
 where:
     options:
@@ -15,54 +20,56 @@ where:
     positional:
     <cmd>   an existing command"
 
-_get_command() {
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h | --help)
+                echo "$usage"
+                exit 0
+                ;;
+            -*)
+                echo "Unknown option: $1"
+                echo "$usage"
+                exit 1
+                ;;
+            *)
+                cmd="$1"
+                shift
+                ;;
+        esac
+    done
+
+    if [[ -z $cmd ]]; then
+        cmd="$(cat -)"
+    fi
+
+    cmd=$(get_command <<<"$cmd")
+}
+
+get_command() {
     sed "s/\( -\).*$//"
 }
 
-_remove_line_number() {
+get_fzf_help_opts() {
+    if [[ -z $FZF_HELP_OPTS ]]; then
+        FZF_HELP_OPTS="--multi --preview-window=right,75%,wrap --height 80% "
+        FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
+    fi
+}
+
+remove_line_number() {
     sed "s/^.*://g"
 }
 
-options=$(getopt -o h --long help -- "$@")
-[ $? -eq 0 ] || { echo "Incorrect options provided"; exit 1; }
+cmd=""
+parse_args "$@"
+[[ -z $cmd ]] && echo "$usage" && exit 1
 
-eval set -- "$options"
-while true; do
-    case "$1" in
-    -h | --help)
-        echo "$usage"
-        exit
-        ;;
-    --)
-        shift
-        break
-        ;;
-    esac
-    shift
-done
+get_fzf_help_opts
 
-if [[ -p /dev/stdin ]]; then
-    buffer="$(cat -)"
-else
-    buffer="${@}"
-fi
+dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
+help_msg="$($dir/help-message "$cmd")"
+opts="$($dir/cli-options <<<$help_msg)"
+preview_cmd="echo \"$help_msg\" | $dir/fzf-select-option-preview \"$opts\" {n}"
 
-[ $# -eq 0 ] && [ -z "$buffer" ] && { echo "$usage"; exit ;}
-
-if [[ -z $FZF_HELP_OPTS ]]; then
-    FZF_HELP_OPTS="--multi --preview-window=right,75%,nowrap --height 80% "
-    FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
-fi
-
-cmd=$(echo $buffer | _get_command)
-[[ -z $cmd ]] && exit 1
-
-this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
-help_msg='/tmp/fzf-select-option-help-msg.help'
-$this_dir/help-message "$cmd" > $help_msg
-opts="$(cat $help_msg | $this_dir/cli-options)"
-
-echo "$opts" | _remove_line_number |
-fzf --prompt="$buffer" \
-    --preview "$this_dir/bat-cli-option \"$help_msg\" \"$opts\" {n}" \
-    $FZF_HELP_OPTS
+remove_line_number <<<"$opts" | fzf --prompt="$buffer" --preview "$preview_cmd" $FZF_HELP_OPTS
