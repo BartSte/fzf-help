@@ -58,12 +58,10 @@ get_fzf_help_opts() {
 }
 
 get_preview_cmd() {
-    if [[ -z $help_msg ]]; then
-        echo "echo \"No help message found for $cmd\""
-    elif [[ -z $opts ]]; then
-        echo "echo \"No options found for $cmd\""
+    if [[ -z $opts ]]; then
+        echo "echo \"No help page or options found for $cmd\""
     else
-        echo "echo \"$help_msg\" | $dir/fzf-select-option-preview \"$opts\" {n}"
+        echo "$dir/help-message \"$cmd\" | $dir/fzf-select-option-preview \"$opts\" {n}"
     fi
 }
 
@@ -78,8 +76,7 @@ parse_args "$@"
 get_fzf_help_opts
 
 dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
-help_msg="$($dir/help-message "$cmd" 2>/dev/null)"
-opts="$($dir/cli-options <<<$help_msg)"
+opts="$($dir/help-message "$cmd" | $dir/cli-options)"
 preview_cmd=$(get_preview_cmd)
 
 remove_line_number <<<"$opts" | fzf --prompt="$buffer" --preview "$preview_cmd" $FZF_HELP_OPTS

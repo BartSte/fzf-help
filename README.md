@@ -42,7 +42,7 @@ which will bind the `fzf-help-widget` to the `ctrl-a`, which you should trigger
 after typing the command you want to get help for.
 
 ## bash
-Run the following command to install fzf-help in the bash plugin directory
+Run the following command to install `fzf-help` in the bash plugin directory
 at `/usr/share/fzf-help`.
 ```bash
 tmp_dir=$(mktemp -d);
@@ -67,18 +67,19 @@ The following environment variables can be set to configure the behaviour of
   FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
   ```
 - `CLI_OPTIONS_REGEX`: regex to match the command line options in the `--help`
-    documentation. Check the `cli_options` command for the default value.
+  documentation. Check the `cli_options` command for the default value.
 
 - `HELP_MESSAGE_CMD`: controls which command is used to retrieve the command
-    line options. Here, the `$cmd` variable is the command to get the options
-    for. Defaults to `$cmd --help`. You can use `man $cmd` if you want to use
-    the man page instead of the `--help` documentation.
+  line options. Here, the `$cmd` variable is the command to get the options for.
+  Defaults to `$cmd --help`. You can use `man -P cat $cmd` if you want to use the
+  man page instead of the `--help` documentation.
 
 # Usage
 As the demo shows, you can use `fzf-help` by typing `ctrl-a` after typing the
 command you want to get help for. This will open `fzf` with a list of options
 and the `--help` documentation in the preview window. You can press `ctrl-a`
 again to toggle the preview window to the bottom or the right of the widget.
+This is usefull when you do not like page wrapping.
 
 # Troubleshooting
 If you encounter any issues, please report them on the issue tracker at:
@@ -92,7 +93,3 @@ more information.
 
 # License
 Distributed under the [MIT License](./LICENCE).
-
-# Improvements
-- [ ] HELP_MESSAGE_CMD='man $cmd' does not work
-- [ ] fzf-help-widget does not work for "cd" and "man"
