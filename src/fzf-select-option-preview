@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-usage="Usage: $(basename "$0") [-h | --help] <msg> <opts> <index>
+usage="Usage: $(basename "$0") [-h | --help] <opts> <index>
 
-Uses bat to display the help message <msg>. The command line options are
+Uses bat to display the help message from stdin. The command line options are
 provided as argument <opts>, where the nth value (<index>) of these options is
 highlighted in the help message. 
 
-The options must be provided in the following format:
+stdin can, for example, be the output of the \`--help\` command of a program.
+
+The options <opts> must be provided in the following format:
 
     line_number:option1
     line_number:option2
@@ -15,13 +17,16 @@ The options must be provided in the following format:
 Where <index> is used to get the line-option pair. This format corresponds to
 the output of the 'ag --only-matching --numbers' command.
 
-where:
-    options:
+stdin:
+    The help message to display
+
+options:
     -h --help   shows this help messages
 
-    positional:
+positional:
     <opts>  the command line options
     <index> the index of the option to highlight"
+
 
 parse_args() {
     while [[ $# -gt 0 ]]; do
@@ -31,9 +36,7 @@ parse_args() {
                 exit 0
                 ;;
             *)
-                if [[ -z $msg ]]; then
-                    msg="$1"
-                elif [[ -z $opts ]]; then
+                if [[ -z $opts ]]; then
                     opts="$1"
                 elif [[ -z $index ]]; then
                     index="$1"
@@ -56,7 +59,7 @@ get_line_number() {
     local opts index line_number
     opts=$1
     index=$2
-    line_number=$(echo "$opts" | head -n $(($index+1)) | tail -1 | sed "s/:.*$//g")
+    line_number=$(head -n $(($index+1)) <<< "$opts" | tail -1 | sed "s/:.*$//g")
     [ -z $line_number ] && line_number=0
     echo "$line_number"
 }
@@ -83,11 +86,10 @@ get_half_page() {
 
 parse_args "$@"
 
-[[ -z $msg ]] && echo "Missing <msg>" && echo "$usage" && exit 1
 [[ -z $opts ]] && echo "Missing <opts>" && echo "$usage" && exit 1
 [[ -z $index ]] && echo "Missing <index>" && echo "$usage" && exit 1
 
 line_number=$(get_line_number "$opts" $index)
 scroll=$(get_scroll_lines $line_number)
 printf '\033[2J'
-bat -f -pp -H $line_number -r $scroll: --language=help $msg
+bat -f -pp -H $line_number -r $scroll: --language=help
