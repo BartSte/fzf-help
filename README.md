@@ -18,9 +18,9 @@ bash are supported. Tested on Linux, but should work on MacOS as well.
 
 # Installation
 Ensure that you have the following tools installed:
-- [fzf](www.github.com/junegunn/fzf)
-- [bat](www.github.com/sharkdp/bat)
-- [ag](www.github.com/ggreer/the_silver_searcher)
+- [fzf](https://github.com/junegunn/fzf)
+- [bat](https://www.github.com/sharkdp/bat)
+- [ag](https://www.github.com/ggreer/the_silver_searcher)
 
 ## zsh
 Run the following command to install fzf-help in the zsh plugin directory
