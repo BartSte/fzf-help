@@ -46,6 +46,6 @@ if [[ -d $plugin_dir ]]; then
 fi
 
 echo "Copying fzf-help to $plugin_dir"
-sudo mkdir $plugin_dir || abort
+sudo mkdir -p $plugin_dir || abort
 sudo cp $this_dir/src/* $plugin_dir || abort
 echo 'Installation complete.'
