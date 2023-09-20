@@ -10,6 +10,12 @@ user. A change is always categorized based on the following types:
 - Task: a change is made to the repository that has no effect on the source
   code.
 
+# 1.2.0
+
+## Features
+- Added FZF_HELP_SYNTAX environment variable to configure the syntax highlighting
+  of the fzf preview window.
+
 # 1.1.0
 
 ## Features

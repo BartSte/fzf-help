@@ -107,10 +107,17 @@ The following environment variables can be set to configure the behaviour of
 
 - `FZF_HELP_OPTS`: options to pass to `fzf` when selecting the command to get
   help for. Defaults to:
+
   ```bash
   FZF_HELP_OPTS="--preview-window=right,75%,wrap --height 80% "
   FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
   ```
+
+- `FZF_HELP_SYNTAX`: `bat` syntax highlighting to use for the `--help`
+  documentation in the fzf preview window. The content of `FZF_HELP_SYNTAX`
+  variable is passed to `bat` its `--language` option. It defaults to `help`.
+  Use `bat --list-languages` to get a list of available languages.
+
 - `CLI_OPTIONS_REGEX`: regex to match the command line options in the `--help`
   documentation. Check the `cli_options` command for the default value.
 
@@ -125,7 +132,7 @@ As the demo shows, you can use `fzf-help` by typing `ctrl-a` after typing the
 command you want to get help for. This will open `fzf` with a list of options
 and the `--help` documentation in the preview window. You can press `ctrl-a`
 again to toggle the preview window to the bottom or the right of the widget.
-This is usefull when you do not like page wrapping.
+This is useful when you do not like page wrapping.
 
 # Troubleshooting
 
