@@ -1,9 +1,41 @@
 #!/usr/bin/env bash
+
+usage() {
+    cat <<EOF
+Usage: $0
+This script will uninstall fzf-help from /usr/share/zsh/plugins/fzf-help.
+
+If the --bash option is given, it will uninstall /usr/share/fzf-help instead.
+
+Options:
+    --bash      Uninstall /usr/share/fzf-help instead of
+                /usr/share/zsh/plugins/fzf-help
+    -h, --help  Show this help message
+EOF
+}
+
 this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 plugin_dir=/usr/share/zsh/plugins/fzf-help
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --bash)
+            plugin_dir=/usr/share/fzf-help
+            shift
+            ;;
+        -h | --help)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            usage
+            exit 1
+            ;;
+    esac
+done
 
 abort() {
-    echo 'installation aborted'
+    echo 'Uninstallation aborted'
     exit 1
 }
 
