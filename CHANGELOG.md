@@ -10,9 +10,26 @@ user. A change is always categorized based on the following types:
 - Task: a change is made to the repository that has no effect on the source
   code.
 
+# 1.1.0
+
+## Features
+
+- Added user installation
+
+# 1.0.1
+
+## Bug
+
+- Added --bash option to uninstall script
+
 # 1.0.0
 
+## Features
+
 - short options (-h) are now supported
+
+## Improvements
+
 - the options are now selected based on their index in the opts list. This is
   faster and more reliable. Duplicate options are now expected as this is
   desired: when scrolling through the options, the preview window will show each
@@ -22,23 +39,36 @@ user. A change is always categorized based on the following types:
 
 # 0.4
 
+## Features
+
 - supports both bash and zsh.
 
 # 0.3
+
+## Features
 
 - Added the `--multi` option to fzf
 
 # 0.2
 
+## Features
+
 - Added syntax highlighting for `bat-cli-options`.
 
 # 0.1
 
+## Features
+
 - Added `$CLI_OPTIONS_CMD`.
-- Bugfix: shebangs were not compatible with macos
-- Bugfix: LBUFFER was used instead of BUFFER in `fzf-help.zsh`
+
+## Bug
+
+- shebangs were not compatible with macos
+- LBUFFER was used instead of BUFFER in `fzf-help.zsh`
 
 # 0.0
+
+## Features
 
 - Added `cli-options`.
 - Added `bat-cli-options`.
