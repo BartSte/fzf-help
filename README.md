@@ -53,7 +53,7 @@ rm -rf $tmp_dir;
 
 After installation, you can add the following line to your `.bashrc` file:
 ```bash
-source /usr/share/zsh/plugins/fzf-help/fzf-help.bash
+source /usr/share/fzf-help/fzf-help.bash
 bind -x '"\C-a": fzf-help-widget'
 ```
 
