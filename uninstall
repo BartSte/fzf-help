@@ -18,6 +18,13 @@ this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 plugin_dir=/usr/share/zsh/plugins/fzf-help
 while [[ $# -gt 0 ]]; do
     case $1 in
+        --user)
+            plugin_dir="$HOME/.local/share/fzf-help"
+            shift
+            ;;
+        --zsh)
+            shift
+            ;;
         --bash)
             plugin_dir=/usr/share/fzf-help
             shift
@@ -39,12 +46,20 @@ abort() {
     exit 1
 }
 
-if [[ -d $plugin_dir ]]; then
-    echo "Deleting old installation at: $plugin_dir"
-    sudo rm -rf $plugin_dir || abort
-else
-    echo 'fzf-help is not installed.'
-    exit 0
-fi
+remove_old() {
+    remove="rm -rf $plugin_dir || abort"
+    if [[ -d $plugin_dir ]]; then
+        echo "Found old installation at $plugin_dir"
+        echo "Deleting old installation..."
+        if [[ -w $plugin_dir ]]; then
+            eval $remove
+        else
+            eval "sudo $remove"
+        fi
+        echo 'Uninstall complete.'
+    else
+        echo 'No old installation found.'
+    fi
+}
 
-echo 'Uninstall complete.'
+remove_old
