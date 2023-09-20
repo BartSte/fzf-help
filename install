@@ -8,8 +8,8 @@ This script will install fzf-help to /usr/share/zsh/plugins/fzf-help.
 If the --bash option is given, it will install to /usr/share/fzf-help instead.
 
 Options:
-    --bash      Install to /usr/share/fzf-help instead of
-                /usr/share/zsh/plugins/fzf-help
+    --bash      Install to /usr/share/fzf-help and add fish function
+    --fish      Install to /usr/share/fzf-help and add fish function
     -h, --help  Show this help message
 EOF
 }
@@ -20,6 +20,12 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         --bash)
             plugin_dir=/usr/share/fzf-help
+            shift
+            ;;
+        --fish)
+            plugin_dir=/usr/share/fzf-help
+            function_dir=/etc/fish/functions/
+            isfish=TRUE
             shift
             ;;
         -h | --help)
@@ -48,4 +54,9 @@ fi
 echo "Copying fzf-help to $plugin_dir"
 sudo mkdir -p $plugin_dir || abort
 sudo cp $this_dir/src/* $plugin_dir || abort
+if [ ! -z "$isfish" ]
+  then
+    echo "Copying fzf-helper fish function to $function_dir"
+    sudo mv $plugin_dir/*fish $function_dir || abort
+fi
 echo 'Installation complete.'

@@ -8,8 +8,8 @@ This script will uninstall fzf-help from /usr/share/zsh/plugins/fzf-help.
 If the --bash option is given, it will uninstall /usr/share/fzf-help instead.
 
 Options:
-    --bash      Uninstall /usr/share/fzf-help instead of
-                /usr/share/zsh/plugins/fzf-help
+    --bash      Uninstall from /usr/share/fzf-help
+    --fish      Uninstall from /usr/share/fzf-help and /etc/fish/functions/
     -h, --help  Show this help message
 EOF
 }
@@ -20,6 +20,12 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         --bash)
             plugin_dir=/usr/share/fzf-help
+            shift
+            ;;
+        --fish)
+            plugin_dir=/usr/share/fzf-help
+            function_dir=/etc/fish/functions/
+            isfish=TRUE
             shift
             ;;
         -h | --help)
@@ -42,6 +48,9 @@ abort() {
 if [[ -d $plugin_dir ]]; then
     echo "Deleting old installation at: $plugin_dir"
     sudo rm -rf $plugin_dir || abort
+    if [ ! -z "$isfish" ]; then 
+      sudo rm -rf $function_dir/fzf-help.fish || abort
+    fi
 else
     echo 'fzf-help is not installed.'
     exit 0
