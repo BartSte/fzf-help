@@ -36,6 +36,8 @@ user. A change is always categorized based on the following types:
   line where an option is mentioned.
 - changed the names of the commands and the environment variables to be more
   descriptive.
+- `bat-cli-options` was renamed to `fzf-select-option-preview`.
+
 
 # 0.4
 
