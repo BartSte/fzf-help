@@ -23,7 +23,7 @@ bash are supported. Tested on Linux, but should work on MacOS as well.
 Ensure that you have the following tools installed:
 
 - [fzf](https://github.com/junegunn/fzf)
-- [bat](https://www.github.com/sharkdp/bat)
+- [bat](https://www.github.com/sharkdp/bat) >= 0.21
 - [ag](https://www.github.com/ggreer/the_silver_searcher)
 
 ## zsh
