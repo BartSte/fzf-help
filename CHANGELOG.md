@@ -15,6 +15,7 @@ user. A change is always categorized based on the following types:
 ## Features
 - Added FZF_HELP_SYNTAX environment variable to configure the syntax highlighting
   of the fzf preview window.
+- Added support for the fish shell.
 
 # 1.1.0
 

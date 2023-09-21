@@ -78,7 +78,7 @@ rm -rf $tmp_dir
 ```
 
 After installation, you can add the following line to your
-`~/.config/fish/conf.d` file:
+`~/.config/fish/config.fish` file:
 ```bash
 bind \ca fzf-help-widget
 ```
