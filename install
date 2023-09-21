@@ -33,7 +33,7 @@ parse_args() {
                 ;;
             --fish)
                 plugin_dir=/usr/share/fzf-help
-                function_dir=/etc/fish/functions/
+                function_dir=/etc/fish/functions
                 shift
                 ;;
             -h | --help)
@@ -99,6 +99,7 @@ install() {
         if [[ $function_dir ]]; then
             echo "Copying fzf-helper fish function to $function_dir"
             eval "sudo $make_function_dir"
+            eval "sudo $copy_function"
         fi
     else
         echo "Installing as user"
