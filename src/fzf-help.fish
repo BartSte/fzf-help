@@ -1,13 +1,13 @@
 set this_dir (dirname (realpath (status filename)))
 
 ##############################################################################
-# fzf-help-widget
+# fzf-help
 #
 # fzf-help-widget is a Fish shell function that should be bind to a key. It will open
 # fzf with the help options and append the selected options to the command
 # line.
 ##############################################################################
-function fzf-help-widget
+function fzf-help
   if test -z (commandline)
     return
   end
