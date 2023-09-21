@@ -109,7 +109,7 @@ The following environment variables can be set to configure the behaviour of
   help for. Defaults to:
 
   ```bash
-  FZF_HELP_OPTS="--preview-window=right,75%,wrap --height 80% "
+  FZF_HELP_OPTS="--multi --layout=reverse --preview-window=right,75%,wrap --height 80% "
   FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
   ```
 
