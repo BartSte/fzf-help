@@ -31,7 +31,7 @@ parse_args() {
                 ;;
             --fish)
                 plugin_dir=/usr/share/fzf-help
-                function_dir=/etc/fish/functions/
+                function_dir=/etc/fish/functions
                 shift
                 ;;
             -h | --help)
@@ -78,4 +78,7 @@ plugin_dir=/usr/share/zsh/plugins/fzf-help
 parse_args $@
 
 remove_old $plugin_dir
-remove_old $function_dir/fzf-help.fish
+
+if [[ $function_dir ]]; then
+    remove_old $function_dir/fzf-help.fish
+fi
