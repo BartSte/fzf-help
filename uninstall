@@ -3,43 +3,49 @@
 usage() {
     cat <<EOF
 Usage: $0
-This script will uninstall fzf-help from /usr/share/zsh/plugins/fzf-help.
-
-If the --bash option is given, it will uninstall /usr/share/fzf-help instead.
+This script will uninstall fzf-help from /usr/share/zsh/plugins/fzf-help. If 
+you want to uninstall from a different location, use the options below.
 
 Options:
-    --bash      Uninstall /usr/share/fzf-help instead of
-                /usr/share/zsh/plugins/fzf-help
+    --zsh       Uninstall from /usr/share/zsh/plugins/fzf-help (default)
+    --user      Uninstall from ~/.local/share/fzf-help
+    --bash      Uninstall from /usr/share/fzf-help
+    --fish      Uninstall from /usr/share/fzf-help and /etc/fish/functions/
     -h, --help  Show this help message
 EOF
 }
 
-this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
-plugin_dir=/usr/share/zsh/plugins/fzf-help
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        --user)
-            plugin_dir="$HOME/.local/share/fzf-help"
-            shift
-            ;;
-        --zsh)
-            shift
-            ;;
-        --bash)
-            plugin_dir=/usr/share/fzf-help
-            shift
-            ;;
-        -h | --help)
-            usage
-            exit 0
-            ;;
-        *)
-            echo "Unknown option: $1"
-            usage
-            exit 1
-            ;;
-    esac
-done
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --zsh)
+                shift
+                ;;
+            --user)
+                plugin_dir="$HOME/.local/share/fzf-help"
+                shift
+                ;;
+            --bash)
+                plugin_dir=/usr/share/fzf-help
+                shift
+                ;;
+            --fish)
+                plugin_dir=/usr/share/fzf-help
+                function_dir=/etc/fish/functions/
+                shift
+                ;;
+            -h | --help)
+                usage
+                exit 0
+                ;;
+            *)
+                echo "Unknown option: $1"
+                usage
+                exit 1
+                ;;
+        esac
+    done
+}
 
 abort() {
     echo 'Uninstallation aborted'
@@ -47,19 +53,29 @@ abort() {
 }
 
 remove_old() {
-    remove="rm -rf $plugin_dir || abort"
-    if [[ -d $plugin_dir ]]; then
-        echo "Found old installation at $plugin_dir"
+    local to_remove=$1
+    remove="rm -rf $to_remove || abort"
+
+    if [[ -d $to_remove ]] || [[ -f $to_remove ]]; then
+        echo "Found old installation at $to_remove"
         echo "Deleting old installation..."
-        if [[ -w $plugin_dir ]]; then
+        if [[ -w $to_remove ]]; then
+            echo 'Uninstall as user'
             eval $remove
         else
+            echo 'Uninstall as root'
             eval "sudo $remove"
         fi
         echo 'Uninstall complete.'
     else
-        echo 'No old installation found.'
+        echo "No old installation found at $to_remove."
     fi
 }
 
-remove_old
+this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
+plugin_dir=/usr/share/zsh/plugins/fzf-help
+
+parse_args $@
+
+remove_old $plugin_dir
+remove_old $function_dir/fzf-help.fish

@@ -67,6 +67,22 @@ After installation, you can add the following to your `.bashrc` file:
 source /usr/share/fzf-help/fzf-help.bash
 bind -x '"\C-a": fzf-help-widget'
 ```
+## fish
+Run the following command to install `fzf-help` in the fish plugin directory
+at `/usr/share/fzf-help`.
+```bash
+set tmp_dir (mktemp -d)
+git clone https://github.com/BartSte/fzf-help.git $tmp_dir
+$tmp_dir/install --fish
+rm -rf $tmp_dir
+```
+
+After installation, you can add the following line to your
+`~/.config/fish/conf.d` file:
+```bash
+bind \ca fzf-help-widget
+```
+
 
 ## User installation
 

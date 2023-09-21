@@ -3,13 +3,15 @@
 usage() {
     cat <<EOF
 Usage: $0
-This script will install fzf-help to /usr/share/zsh/plugins/fzf-help.
-
-If the --bash option is given, it will install to /usr/share/fzf-help instead.
+This script will install fzf-help to /usr/share/zsh/plugins/fzf-help. If you
+want to install to a different location, use the options below.
 
 Options:
-    --bash      Install to /usr/share/fzf-help instead of
-                /usr/share/zsh/plugins/fzf-help
+    --zsh       Install to /usr/share/zsh/plugins/fzf-help (default)
+    --user      Install to ~/.local/share/fzf-help
+    --bash      Install to /usr/share/fzf-help
+    --fish      Install to /usr/share/fzf-help and add fish function at 
+                /etc/fish/functions/fzf-help.fish
     -h, --help  Show this help message
 EOF
 }
@@ -17,16 +19,21 @@ EOF
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case $1 in
+            --zsh)
+                shift
+                ;;
             --user)
                 plugin_dir="$HOME/.local/share/fzf-help"
                 root=false
                 shift
                 ;;
-            --zsh)
-                shift
-                ;;
             --bash)
                 plugin_dir=/usr/share/fzf-help
+                shift
+                ;;
+            --fish)
+                plugin_dir=/usr/share/fzf-help
+                function_dir=/etc/fish/functions/
                 shift
                 ;;
             -h | --help)
@@ -49,15 +56,26 @@ abort() {
 
 remove_old() {
     remove="rm -rf $plugin_dir || abort"
+    remove_function="rm -rf $function_dir/fzf-help.fish || abort"
+
     if [[ -d $plugin_dir ]]; then
         echo "Found old installation at $plugin_dir"
         echo "Deleting old installation..."
         if $root; then
             echo "Deleting as root"
             eval "sudo $remove"
+            if [[ -d $function_dir ]]; then
+                echo "Deleting fzf-helper fish function as root at $function_dir"
+                eval "sudo $remove_function"
+            fi
         else
             echo "Deleting as user"
             eval $remove
+            # TODO: --user fish not yet supported
+            # if [[ -d $function_dir ]]; then
+            #     echo "Deleting fzf-helper fish function as user at $function_dir"
+            #     eval "$remove_function"
+            # fi
         fi
         echo 'Uninstall complete.'
     else
@@ -67,16 +85,30 @@ remove_old() {
 
 install() {
     echo "Copying fzf-help to $plugin_dir"
+
     makedir="mkdir -p $plugin_dir || abort"
     copy="cp $this_dir/src/* $plugin_dir || abort"
+
+    make_function_dir="mkdir -p $function_dir || abort"
+    copy_function="cp $this_dir/src/fzf-help.fish $function_dir || abort"
+
     if $root; then
         echo "Installing as root"
         eval "sudo $makedir"
         eval "sudo $copy"
+        if [[ $function_dir ]]; then
+            echo "Copying fzf-helper fish function to $function_dir"
+            eval "sudo $make_function_dir"
+        fi
     else
         echo "Installing as user"
         eval $makedir
         eval $copy
+        # TODO: --user fish not yet supported
+        # if [[ $function_dir ]]; then
+        #    echo "Copying fzf-helper fish function to $function_dir"
+        #    eval "$make_function_dir"
+        # fi
     fi
     echo 'Installation complete.'
 }
@@ -84,6 +116,7 @@ install() {
 this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 root=true
 plugin_dir=/usr/share/zsh/plugins/fzf-help
+function_dir=''
 parse_args $@
 remove_old
 install
