@@ -12,6 +12,17 @@ user. A change is always categorized based on the following types:
 
 If a change is breaking, this is mentioned and a major version is released.
 
+# 2.1.0
+
+## Features
+
+- Added the CLI_OPTIONS_CMD variable to configure the command that is used by
+  the cli-options script.
+
+## Improvements
+
+- The `ag` dependency is now optional.
+
 # 2.0.1
 
 ## Bug
