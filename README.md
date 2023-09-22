@@ -142,10 +142,16 @@ The following environment variables can be set to configure the behaviour of
   FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
   ```
 
-- `FZF_HELP_SYNTAX`: `bat` syntax highlighting to use for the `--help`
-  documentation in the fzf preview window. The content of `FZF_HELP_SYNTAX`
-  variable is passed to `bat` its `--language` option. It defaults to `help`.
-  Use `bat --list-languages` to get a list of available languages.
+- `FZF_HELP_SYNTAX`: set this variable to configure the `bat --language=`
+  option. It defaults to `txt`. If you use `bat` version 0.21 or higher, you can
+  set this variable to:
+
+  ```bash
+  export FZF_HELP_SYNTAX='help'
+  ```
+
+  to get syntax highlighting for the `--help` documentation. Older versions of
+  `bat` do not support this syntax highlighting, therefore the default is `txt`.
 
 - `CLI_OPTIONS_REGEX`: regex to match the command line options in the `--help`
   documentation. Check the `cli_options` command for the default value.

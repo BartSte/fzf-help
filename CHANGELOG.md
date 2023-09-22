@@ -12,6 +12,13 @@ user. A change is always categorized based on the following types:
 
 If a change is breaking, this is mentioned and a major version is released.
 
+# 2.0.1
+
+## Bug
+
+- The default value of `FZF_HELP_SYNTAX` was set to `txt` instead of `help` to
+  support older versions of `bat`.
+
 # 2.0.0
 
 ## Features

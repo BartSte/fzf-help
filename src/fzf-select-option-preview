@@ -89,7 +89,7 @@ parse_args "$@"
 [[ -z $opts ]] && echo "Missing <opts>" && echo "$usage" && exit 1
 [[ -z $index ]] && echo "Missing <index>" && echo "$usage" && exit 1
 
-[[ -z $FZF_HELP_SYNTAX ]] && FZF_HELP_SYNTAX="help"
+[[ -z $FZF_HELP_SYNTAX ]] && FZF_HELP_SYNTAX="txt"
 line_number=$(get_line_number "$opts" $index)
 scroll=$(get_scroll_lines $line_number)
 printf '\033[2J'
