@@ -1,47 +1,63 @@
 # Contents
 
 - [Introduction](#introduction)
-- [Installation](#installation)
+- [Dependencies](#dependencies)
+- [Installation as root](#installation-as-root)
+  - [zsh](#zsh)
+  - [bash](#bash)
+  - [fish](#fish)
+- [Installation as user](#installation-as-user)
+  - [zsh](#zsh-1)
+  - [bash](#bash-1)
+  - [fish](#fish-1)
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
-- [Improvements](#improvements)
 
 # Introduction
 
-`fzf-help` is an `fzf` extension that allows you to select one of the command
-line options of a given command. The options are retrieved from the command its
-`--help` documentation, which is displayed in a preview window. Both zsh and
-bash are supported. Tested on Linux, but should work on MacOS as well.
+`fzf-help` is an `fzf` extension that allows you to select command line options
+of a given command. The options are retrieved from the command its `--help`
+documentation, which is displayed in a preview window. Zsh, bash and fish are
+supported. Tested on Linux, but should work on other platforms that support
+one of the shells.
 
 ![demo](./demo.gif)
 
-# Installation
+# Dependencies
 
 Ensure that you have the following tools installed:
 
 - [fzf](https://github.com/junegunn/fzf)
 - [bat](https://www.github.com/sharkdp/bat) >= 0.21
-- [ag](https://www.github.com/ggreer/the_silver_searcher)
+- [ag (the_silver_searcher)](https://www.github.com/ggreer/the_silver_searcher)
+
+On Arch, for example, you can install these tools with:
+
+```zsh
+sudo pacman -S fzf bat the_silver_searcher
+```
+
+# Installation as root
+
+After installing the dependencies, run the following bash command to install
+`fzf-help` in the `/usr/share/fzf-help` directory:
+
+```bash
+bash -c 'tmp_dir=$(mktemp -d); git clone https://github.com/BartSte/fzf-help.git $tmp_dir; $tmp_dir/install; rm -rf $tmp_dir;'
+```
+
+The following sections describe how to setup the key bindings for the
+supported shells.
 
 ## zsh
 
-Run the following command to install fzf-help in the zsh plugin directory
-at `/usr/share/zsh/plugins`.
-
-```bash
-tmp_dir=$(mktemp -d);
-git clone https://github.com/BartSte/fzf-help.git $tmp_dir;
-$tmp_dir/install;
-rm -rf $tmp_dir;
-```
-
 After installation, add the following to your `.zshrc` file:
 
-```bash
-source /usr/share/zsh/plugins/fzf-help/fzf-help.zsh
+```zsh
+source /usr/share/fzf-help/fzf-help.zsh
 zle -N fzf-help-widget
 bindkey "^A" fzf-help-widget
 ```
@@ -51,50 +67,37 @@ after typing the command you want to get help for.
 
 ## bash
 
-Run the following command to install `fzf-help` in the bash plugin directory
-at `/usr/share/fzf-help`.
-
-```bash
-tmp_dir=$(mktemp -d);
-git clone https://github.com/BartSte/fzf-help.git $tmp_dir;
-$tmp_dir/install --bash;
-rm -rf $tmp_dir;
-```
-
 After installation, you can add the following to your `.bashrc` file:
 
 ```bash
 source /usr/share/fzf-help/fzf-help.bash
 bind -x '"\C-a": fzf-help-widget'
 ```
+
+which will bind the `fzf-help-widget` to the `ctrl-a`, which you should trigger
+after typing the command you want to get help for.
+
 ## fish
-Run the following command to install `fzf-help` in the fish plugin directory
-at `/usr/share/fzf-help`.
-```bash
-set tmp_dir (mktemp -d)
-git clone https://github.com/BartSte/fzf-help.git $tmp_dir
-$tmp_dir/install --fish
-rm -rf $tmp_dir
-```
 
-After installation, you can add the following line to your
+After installation, you can add the following to your
 `~/.config/fish/config.fish` file:
-```bash
-bind \ca fzf-help
+
+```fish
+source /usr/share/fzf-help/fzf-help.fish
+bind \ca fzf-help-widget
 ```
 
+which will bind the `fzf-help-widget` to the `ctrl-a`, which you should trigger
+after typing the command you want to get help for.
 
-## User installation
+## Installation as user
 
 Run the following command to install `fzf-help` in the
 `$HOME/.local/share/fzf-help` directory. Use this if you do not have root
 access.
 
 ```bash
-tmp_dir=$(mktemp -d);
-git clone https://github.com/BartSte/fzf-help.git $tmp_dir;
-$tmp_dir/install --user;
-rm -rf $tmp_dir;
+bash -c 'tmp_dir=$(mktemp -d); git clone https://github.com/BartSte/fzf-help.git $tmp_dir; $tmp_dir/install --user; rm -rf $tmp_dir;'
 ```
 
 ### zsh
@@ -114,6 +117,16 @@ If you use bash, you can add the following to your `.bashrc` file:
 ```bash
 source $HOME/.local/share/fzf-help/fzf-help.bash
 bind -x '"\C-a": fzf-help-widget'
+```
+
+### fish
+
+If you use fish, you can add the following to your
+`~/.config/fish/config.fish` file:
+
+```fish
+source $HOME/.local/share/fzf-help/fzf-help.fish
+bind \ca fzf-help-widget
 ```
 
 # Configuration
@@ -157,7 +170,7 @@ If you encounter any issues, please report them on the issue tracker at:
 
 Please note that `fzf-help` is tested on Linux only.
 
-## Contributing
+# Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING](./CONTRIBUTING.md) for
 more information.

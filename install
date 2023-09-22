@@ -3,37 +3,29 @@
 usage() {
     cat <<EOF
 Usage: $0
-This script will install fzf-help to /usr/share/zsh/plugins/fzf-help. If you
-want to install to a different location, use the options below.
+This script will install fzf-help to /usr/share/fzf-help. If you
+want to install without root privileges, use the --user option to install to
+~/.local/share/fzf-help.
 
 Options:
-    --zsh       Install to /usr/share/zsh/plugins/fzf-help (default)
+    --root      Install to /usr/share/fzf-help (default)
     --user      Install to ~/.local/share/fzf-help
-    --bash      Install to /usr/share/fzf-help
-    --fish      Install to /usr/share/fzf-help and add fish function at 
-                /etc/fish/functions/fzf-help.fish
     -h, --help  Show this help message
 EOF
 }
 
+#######################################
+# Parse command line arguments
+#######################################
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case $1 in
-            --zsh)
+            --root)
                 shift
                 ;;
             --user)
                 plugin_dir="$HOME/.local/share/fzf-help"
                 root=false
-                shift
-                ;;
-            --bash)
-                plugin_dir=/usr/share/fzf-help
-                shift
-                ;;
-            --fish)
-                plugin_dir=/usr/share/fzf-help
-                function_dir=/etc/fish/functions
                 shift
                 ;;
             -h | --help)
@@ -54,34 +46,25 @@ abort() {
     exit 1
 }
 
+#######################################
+# Install fzf-help with, or without root privileges, depending on the value of
+# the $root variable.
+#######################################
 install() {
-    echo "Copying fzf-help to $plugin_dir"
+    echo "Installing fzf-help at: $plugin_dir"
 
     makedir="mkdir -p $plugin_dir || abort"
     copy="cp $this_dir/src/* $plugin_dir || abort"
-
-    make_function_dir="mkdir -p $function_dir || abort"
-    copy_function="cp $this_dir/src/fzf-help.fish $function_dir || abort"
-
     if $root; then
         echo "Installing as root"
         eval "sudo $makedir"
         eval "sudo $copy"
-        if [[ $function_dir ]]; then
-            echo "Copying fzf-helper fish function to $function_dir"
-            eval "sudo $make_function_dir"
-            eval "sudo $copy_function"
-        fi
     else
         echo "Installing as user"
         eval $makedir
         eval $copy
-        # TODO: --user fish not yet supported
-        # if [[ $function_dir ]]; then
-        #    echo "Copying fzf-helper fish function to $function_dir"
-        #    eval "$make_function_dir"
-        # fi
     fi
+
     echo 'Installation complete.'
 }
 
@@ -89,7 +72,6 @@ this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 $this_dir/uninstall $@
 
 root=true
-plugin_dir=/usr/share/zsh/plugins/fzf-help
-function_dir=''
+plugin_dir=/usr/share/fzf-help
 parse_args $@
 install

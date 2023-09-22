@@ -3,35 +3,28 @@
 usage() {
     cat <<EOF
 Usage: $0
-This script will uninstall fzf-help from /usr/share/zsh/plugins/fzf-help. If 
-you want to uninstall from a different location, use the options below.
+This script will uninstall fzf-help from /usr/share/fzf-help. If you
+want to uninstall without root privileges, use the --user option to uninstall
+from ~/.local/share/fzf-help.
 
 Options:
-    --zsh       Uninstall from /usr/share/zsh/plugins/fzf-help (default)
+    --root      Uinstall from /usr/share/fzf-help (default)
     --user      Uninstall from ~/.local/share/fzf-help
-    --bash      Uninstall from /usr/share/fzf-help
-    --fish      Uninstall from /usr/share/fzf-help and /etc/fish/functions/
     -h, --help  Show this help message
 EOF
 }
 
+#######################################
+# Parse command line arguments
+#######################################
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case $1 in
-            --zsh)
+            --root)
                 shift
                 ;;
             --user)
                 plugin_dir="$HOME/.local/share/fzf-help"
-                shift
-                ;;
-            --bash)
-                plugin_dir=/usr/share/fzf-help
-                shift
-                ;;
-            --fish)
-                plugin_dir=/usr/share/fzf-help
-                function_dir=/etc/fish/functions
                 shift
                 ;;
             -h | --help)
@@ -52,14 +45,16 @@ abort() {
     exit 1
 }
 
+#######################################
+# Remove old installation
+#######################################
 remove_old() {
-    local to_remove=$1
-    remove="rm -rf $to_remove || abort"
+    remove="rm -rf $plugin_dir || abort"
 
-    if [[ -d $to_remove ]] || [[ -f $to_remove ]]; then
-        echo "Found old installation at $to_remove"
+    if [[ -d $plugin_dir ]]; then
+        echo "Found old installation at: $plugin_dir"
         echo "Deleting old installation..."
-        if [[ -w $to_remove ]]; then
+        if [[ -w $plugin_dir ]]; then
             echo 'Uninstall as user'
             eval $remove
         else
@@ -68,17 +63,10 @@ remove_old() {
         fi
         echo 'Uninstall complete.'
     else
-        echo "No old installation found at $to_remove."
+        echo "No old installation found at: $plugin_dir."
     fi
 }
 
-this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
-plugin_dir=/usr/share/zsh/plugins/fzf-help
-
+plugin_dir=/usr/share/fzf-help
 parse_args $@
-
-remove_old $plugin_dir
-
-if [[ $function_dir ]]; then
-    remove_old $function_dir/fzf-help.fish
-fi
+remove_old
