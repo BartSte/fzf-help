@@ -2,10 +2,9 @@
 
 usage="Usage: $(basename "$0") [-h | --help]
 
-Returns the positional command line arguments that are present in stdin. The
-options are extracted using the regex provided by the CLI_OPTIONS_REGEX
-environment variable. If the regex is not provided, then the default regex is
-used.
+Returns the optional command line arguments that are present in stdin. The
+options are extracted using the command that is defined in the CLI_OPTIONS_CMD
+environment variable. If this variable is not set, the default command is used.
 
 where:
     options:
@@ -28,22 +27,19 @@ parse_args() {
     done
 }
 
-get_regex() {
-    if [[ -z $CLI_OPTIONS_REGEX ]]; then
-        PREFIX='(?<=[^\-])(--|‐‐)' # 2 different types of dashes, different key-codes
-        HEAD='a-zA-Z0-9\['
-        MIDDLE='a-zA-Z0-9\[\]\-\=\.\,\%'
-        TAIL='a-zA-Z0-9'
-        LONG="($PREFIX)([$HEAD]+[$MIDDLE]*[$TAIL]+)"
+# 2 different types of dashes, they look the same but have different key-codes
+PREFIX='(?<=[^\-])(--|‐‐)'
+HEAD='a-zA-Z0-9\['
+MIDDLE='a-zA-Z0-9\[\]\-\=\.\,\%'
+TAIL='a-zA-Z0-9'
+LONG="($PREFIX)([$HEAD]+[$MIDDLE]*[$TAIL]+)"
 
-        PREFIX='(?<=[^\-a-zA-Z0-9])(-)'
-        TAIL='[a-zA-Z]{1}'
-        SHORT="($PREFIX)($TAIL)"
+PREFIX='(?<=[^\-a-zA-Z0-9])(-)'
+TAIL='[a-zA-Z]{1}'
+SHORT="($PREFIX)($TAIL)"
 
-        CLI_OPTIONS_REGEX="$LONG|$SHORT"
-    fi
-    echo "$CLI_OPTIONS_REGEX"
-}
+RE="$LONG|$SHORT"
 
 parse_args "$@"
-ag --only-matching --numbers -- "$(get_regex)"
+[[ -z $CLI_OPTIONS_CMD ]] && CLI_OPTIONS_CMD="grep -o --line-number -P -- '$RE'"
+eval "$CLI_OPTIONS_CMD"

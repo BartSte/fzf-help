@@ -32,12 +32,11 @@ Ensure that you have the following tools installed:
 
 - [fzf](https://github.com/junegunn/fzf)
 - [bat](https://www.github.com/sharkdp/bat) >= 0.21
-- [ag (the_silver_searcher)](https://www.github.com/ggreer/the_silver_searcher)
 
 On Arch, for example, you can install these tools with:
 
 ```zsh
-sudo pacman -S fzf bat the_silver_searcher
+sudo pacman -S fzf bat
 ```
 
 # Installation as root
@@ -153,8 +152,33 @@ The following environment variables can be set to configure the behaviour of
   to get syntax highlighting for the `--help` documentation. Older versions of
   `bat` do not support this syntax highlighting, therefore the default is `txt`.
 
-- `CLI_OPTIONS_REGEX`: regex to match the command line options in the `--help`
-  documentation. Check the `cli_options` command for the default value.
+- `CLI_OPTIONS_CMD`: set this environment variable to the command you want to
+  use to retrieve the command line options. When defining the command, ensure
+  that the output is in the form of: the line number on which the option was
+  found, a colon, and the name of the option (including the leading dashes).
+  For example:
+
+  ```txt
+  line-number:--option1
+  line-number:--option2
+  line-number:--option3
+  ```
+
+  where `line-number` is used to highlight the line in the fzf preview window.
+  The default command is:
+
+  ```bash
+  grep -o --line-number -P -- $RE
+  ```
+
+  where `$RE` is the regular expression that is used to match the command line
+  options. You can also add this to your custom command by adding `$RE` in your
+  command. For example, if you want to use `ag` instead of `grep`, you can set
+  `CLI_OPTIONS_CMD` to:
+
+  ```bash
+  export CLI_OPTIONS_CMD='ag -o --numbers -- $RE'
+  ```
 
 - `HELP_MESSAGE_CMD`: controls which command is used to retrieve the command
   line options. Here, the `$cmd` variable is the command to get the options for.
