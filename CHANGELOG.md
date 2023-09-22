@@ -10,12 +10,21 @@ user. A change is always categorized based on the following types:
 - Task: a change is made to the repository that has no effect on the source
   code.
 
-# 1.2.0
+If a change is breaking, this is mentioned and a major version is released.
+
+# 2.0.0
 
 ## Features
+
 - Added FZF_HELP_SYNTAX environment variable to configure the syntax highlighting
   of the fzf preview window.
 - Added support for the fish shell.
+
+## Improvements
+
+- **Breaking**: Refactored the install and uninstall scripts. The install directory is now
+  `/usr/share/fzf-help` for root installations and `$HOME/.local/share/fzf-help`
+  for user installations, independent of the shell.
 
 # 1.1.0
 
@@ -44,7 +53,6 @@ user. A change is always categorized based on the following types:
 - changed the names of the commands and the environment variables to be more
   descriptive.
 - `bat-cli-options` was renamed to `fzf-select-option-preview`.
-
 
 # 0.4
 
