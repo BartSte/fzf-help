@@ -54,35 +54,6 @@ abort() {
     exit 1
 }
 
-remove_old() {
-    remove="rm -rf $plugin_dir || abort"
-    remove_function="rm -rf $function_dir/fzf-help.fish || abort"
-
-    if [[ -d $plugin_dir ]]; then
-        echo "Found old installation at $plugin_dir"
-        echo "Deleting old installation..."
-        if $root; then
-            echo "Deleting as root"
-            eval "sudo $remove"
-            if [[ -d $function_dir ]]; then
-                echo "Deleting fzf-helper fish function as root at $function_dir"
-                eval "sudo $remove_function"
-            fi
-        else
-            echo "Deleting as user"
-            eval $remove
-            # TODO: --user fish not yet supported
-            # if [[ -d $function_dir ]]; then
-            #     echo "Deleting fzf-helper fish function as user at $function_dir"
-            #     eval "$remove_function"
-            # fi
-        fi
-        echo 'Uninstall complete.'
-    else
-        echo 'No old installation found.'
-    fi
-}
-
 install() {
     echo "Copying fzf-help to $plugin_dir"
 
@@ -115,9 +86,10 @@ install() {
 }
 
 this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
+$this_dir/uninstall $@
+
 root=true
 plugin_dir=/usr/share/zsh/plugins/fzf-help
 function_dir=''
 parse_args $@
-remove_old
 install
