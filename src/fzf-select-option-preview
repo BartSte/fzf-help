@@ -27,11 +27,10 @@ positional:
     <opts>  the command line options
     <index> the index of the option to highlight"
 
-
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            -h|--help)
+            -h | --help)
                 echo "$usage"
                 exit 0
                 ;;
@@ -52,33 +51,46 @@ parse_args() {
 }
 
 #######################################
-# From the line_number:option pairs, returns the line number for the option
-# using the <index>.
+# `opts` is a list of line_number:option pairs, separated by a new line. For
+# example:
+#   1:--some-option
+#   2:--some-other-option
+#  10:--another-option
+# This function returns the line number of the option at the given index. In
+# the example above, for index 0, the line number 1 is returned.
 #######################################
 get_line_number() {
     local opts index line_number
     opts=$1
     index=$2
-    line_number=$(head -n $(($index+1)) <<< "$opts" | tail -1 | sed "s/:.*$//g")
+    line_number=$(head -n $(($index + 1)) <<<"$opts" | tail -1 | sed "s/:.*$//g")
     [ -z $line_number ] && line_number=0
     echo "$line_number"
 }
 
+#######################################
+# Returns the number of lines to scroll up such that the line containing the
+# option at the given index is in the middle of the screen.
+#######################################
 get_scroll_lines() {
     local half_page line_number scroll
 
     line_number=$1
     half_page=$(get_half_page)
 
-    scroll=$(($line_number-$half_page));
-    scroll=$(($scroll > 0 ? $scroll : 0));
+    scroll=$(($line_number - $half_page))
+    scroll=$(($scroll > 0 ? $scroll : 0))
     echo $scroll
 }
 
+#######################################
+# Returns half the number of lines of the terminal. If the environment variable
+# FZF_PREVIEW_LINES is set, its value is returned instead.
+#######################################
 get_half_page() {
     local number_of_lines
 
-    number_of_lines=$FZF_PREVIEW_LINES 
+    number_of_lines=$FZF_PREVIEW_LINES
     [ -z $number_of_lines ] && number_of_lines=$(tput lines)
 
     echo $(($number_of_lines / 2))
