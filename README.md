@@ -31,7 +31,7 @@ one of the shells.
 Ensure that you have the following tools installed:
 
 - [fzf](https://github.com/junegunn/fzf)
-- [bat](https://www.github.com/sharkdp/bat) >= 0.21
+- [bat](https://www.github.com/sharkdp/bat)
 
 On Arch, for example, you can install these tools with:
 
