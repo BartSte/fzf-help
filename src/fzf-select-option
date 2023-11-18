@@ -61,7 +61,8 @@ get_preview_cmd() {
     if [[ -z $opts ]]; then
         echo "echo \"No help page or options found for $cmd\""
     else
-        echo "$dir/help-message \"$cmd\" | $dir/fzf-select-option-preview \"$opts\" {n}"
+        # Uses the cached help message, see help-message.
+        echo "$dir/help-message | $dir/fzf-select-option-preview \"$opts\" {n}"
     fi
 }
 

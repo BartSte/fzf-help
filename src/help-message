@@ -2,11 +2,16 @@
 
 usage="Usage: $(basename "$0") [-h | --help] <cmd>
 
-Evaluates the HELP_MESSAGE_CMD environment variable. If it is not set, then
-<cmd> --help is used. You can use the <cmd> variable in the HELP_MESSAGE_CMD 
-by using \$cmd as a placeholder for the command. For example:
+Evaluates the HELP_MESSAGE_CMD environment variable and writes the result to
+stdout and a temp file. If no <cmd> argument is given, then the content of
+the temp file is written to stdout, i.e, the help message of the command that
+was last evaluated.
 
-export HELP_MESSAGE_CMD='\$cmd --help'
+The default values of HELP_MESSAGE_CMD is:
+
+    export HELP_MESSAGE_CMD='\$cmd --help'
+
+here, you can \$cmd as a placeholder for the <cmd> argument.
 
 where:
     options:
@@ -18,7 +23,7 @@ where:
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            -h|--help)
+            -h | --help)
                 echo "$usage"
                 exit 0
                 ;;
@@ -36,9 +41,19 @@ parse_args() {
     done
 }
 
+get_temp() {
+    local tmpdir
+    tmpdir=$(dirname $(mktemp tmp.XXXXXXXXXX -ut))
+    echo $tmpdir/fzf-help-message
+}
+
 parse_args "$@"
+help_message=$(get_temp)
 
-[[ $cmd ]] || { echo "Missing <cmd> argument"; echo "$usage"; exit 1; }
-[[ $HELP_MESSAGE_CMD ]] || HELP_MESSAGE_CMD="$cmd --help" 
+[[ $HELP_MESSAGE_CMD ]] || HELP_MESSAGE_CMD="$cmd --help"
 
-eval $HELP_MESSAGE_CMD || exit 1
+if [[ $cmd ]]; then
+    eval $HELP_MESSAGE_CMD > $help_message
+fi
+
+[[ -f $help_message ]] && cat $help_message || exit 1
