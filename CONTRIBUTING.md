@@ -6,8 +6,8 @@ contributions from everyone.
 ## Getting Started
 
 1. Fork the repository on GitHub.
-2. Clone your forked repository (`git clone
-   https://github.com/your_username/fzf-help.git`).
+2. Clone your forked repository and checkout the develop branch (`git clone
+   https://github.com/your_username/fzf-help.git -b develop`).
 3. Create a new branch (`git checkout -b my_branch_name`).
 4. Make your changes.
 5. Commit your changes (`git commit -am "Add some feature"`).
