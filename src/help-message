@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 usage="Usage: $(basename "$0") [-h | --help] <cmd>
 
@@ -42,18 +43,18 @@ parse_args() {
 }
 
 get_temp() {
-    local tmpdir
-    tmpdir=$(dirname $(mktemp tmp.XXXXXXXXXX -ut))
-    echo $tmpdir/fzf-help-message
+    local tmpdir file
+    tmpdir=$(dirname "$(mktemp tmp.XXXXXXXXXX -ut)")
+    file="$tmpdir/fzf-help-message"
+    touch "$file"
+    echo "$file"
 }
 
+cmd=""
 parse_args "$@"
 help_message=$(get_temp)
+help_message_cmd="${HELP_MESSAGE_CMD:-$cmd --help}"
 
-[[ $HELP_MESSAGE_CMD ]] || HELP_MESSAGE_CMD="$cmd --help"
+[[ $cmd ]] && { eval "$help_message_cmd" >"$help_message" || true; }
 
-if [[ $cmd ]]; then
-    eval $HELP_MESSAGE_CMD > $help_message
-fi
-
-[[ -f $help_message ]] && cat $help_message || exit 1
+cat "$help_message"

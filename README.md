@@ -193,6 +193,12 @@ and the `--help` documentation in the preview window. You can press `ctrl-a`
 again to toggle the preview window to the bottom or the right of the widget.
 This is useful when you do not like page wrapping.
 
+# Tests
+
+- Install bats-core, bats-assert, bats-support
+- Make sure BATS_LIB_PATH is set properly
+- Run `bats test`
+
 # Troubleshooting
 
 If you encounter any issues, please report them on the issue tracker at:
