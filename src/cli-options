@@ -41,5 +41,5 @@ SHORT="($PREFIX)($TAIL)"
 RE="$LONG|$SHORT"
 
 parse_args "$@"
-cli_options_cmd="${CLI_OPTIONS_CMD:-grep -o --line-number -P -- "$RE"}"
+cli_options_cmd="${CLI_OPTIONS_CMD:-"grep -o --line-number -P -- \"$RE\""}"
 eval "$cli_options_cmd"
