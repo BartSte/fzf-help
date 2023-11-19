@@ -1,4 +1,6 @@
-# Contents
+# README
+
+## Contents
 
 - [Introduction](#introduction)
 - [Dependencies](#dependencies)
@@ -12,11 +14,12 @@
   - [fish](#fish-1)
 - [Configuration](#configuration)
 - [Usage](#usage)
+- [Tests](#tests)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
 
-# Introduction
+## Introduction
 
 `fzf-help` is an `fzf` extension that allows you to select command line options
 of a given command. The options are retrieved from the command its `--help`
@@ -26,7 +29,7 @@ one of the shells.
 
 ![demo](./demo.gif)
 
-# Dependencies
+## Dependencies
 
 Ensure that you have the following tools installed:
 
@@ -39,7 +42,7 @@ On Arch, for example, you can install these tools with:
 sudo pacman -S fzf bat
 ```
 
-# Installation as root
+## Installation as root
 
 After installing the dependencies, run the following bash command to install
 `fzf-help` in the `/usr/share/fzf-help` directory:
@@ -128,7 +131,7 @@ source $HOME/.local/share/fzf-help/fzf-help.fish
 bind \ca fzf-help-widget
 ```
 
-# Configuration
+## Configuration
 
 The following environment variables can be set to configure the behaviour of
 `fzf-help`:
@@ -185,7 +188,7 @@ The following environment variables can be set to configure the behaviour of
   Defaults to `$cmd --help`. You can use `man -P cat $cmd` if you want to use the
   man page instead of the `--help` documentation.
 
-# Usage
+## Usage
 
 As the demo shows, you can use `fzf-help` by typing `ctrl-a` after typing the
 command you want to get help for. This will open `fzf` with a list of options
@@ -193,24 +196,43 @@ and the `--help` documentation in the preview window. You can press `ctrl-a`
 again to toggle the preview window to the bottom or the right of the widget.
 This is useful when you do not like page wrapping.
 
-# Tests
+## Tests
 
-- Install bats-core, bats-assert, bats-support
-- Make sure BATS_LIB_PATH is set properly
-- Run `bats test`
+To run the test make sure the following is installed:
 
-# Troubleshooting
+- Install [bats-core](https://github.com/bats-core/bats-core)
+- Install [bats-assert](https://github.com/ztombol/bats-assert)
+- Install [bats-support](https://github.com/ztombol/bats-support)
+
+After this, set the `BATS_LIB_PATH` environment variable to the directories
+where the bats libraries are installed. For example:
+
+```bash
+export BATS_LIB_PATH=/usr/lib:/usr/lib/bats
+```
+
+For more information, see the [bats-core documentation](https://bats-core.readthedocs.io/en/stable/)
+
+To run the tests, cd to the root of the repository and run:
+
+```bash
+bats test
+```
+
+where `bats` is the bats-core executable that should be in your path.
+
+## Troubleshooting
 
 If you encounter any issues, please report them on the issue tracker at:
 [fzf-help issues](https://github.com/BartSte/fzf-help/issues).
 
 Please note that `fzf-help` is tested on Linux only.
 
-# Contributing
+## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING](./CONTRIBUTING.md) for
 more information.
 
-# License
+## License
 
 Distributed under the [MIT License](./LICENCE).
