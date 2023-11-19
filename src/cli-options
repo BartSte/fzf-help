@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 usage="Usage: $(basename "$0") [-h | --help]
 
@@ -23,7 +24,6 @@ parse_args() {
                 exit 1
                 ;;
         esac
-        shift
     done
 }
 
@@ -41,5 +41,5 @@ SHORT="($PREFIX)($TAIL)"
 RE="$LONG|$SHORT"
 
 parse_args "$@"
-[[ -z $CLI_OPTIONS_CMD ]] && CLI_OPTIONS_CMD="grep -o --line-number -P -- '$RE'"
-eval "$CLI_OPTIONS_CMD"
+cli_options_cmd="${CLI_OPTIONS_CMD:-grep -o --line-number -P -- "$RE"}"
+eval "$cli_options_cmd"
