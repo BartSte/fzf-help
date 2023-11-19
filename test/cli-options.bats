@@ -1,10 +1,8 @@
 #!/usr/bin/env bats
 # vim: ft=bash
-
-setup() {
-    load helpers.bash
-    global_setup
-}
+bats_load_library bats-assert
+bats_load_library bats-support
+load helpers.bash
 
 @test "Run with -h" {
     cli-options -h
@@ -15,11 +13,11 @@ setup() {
 }
 
 @test "Run empty stdin" {
-    run cli-options <<< ""
+    run cli-options <<<""
     assert_output ""
 }
 
 @test "Assert 'mv --help' options" {
-    run cli-options < "$(static mv-help.txt)"
-    assert_output < "$(static mv-options.txt)"
+    run cli-options <"$(static mv-help.txt)"
+    assert_output <"$(static mv-options.txt)"
 }

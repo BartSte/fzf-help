@@ -1,7 +1,8 @@
 #!/usr/bin/env bats
 # vim: ft=bash
 
-static() {
+setup_suite() {
     DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")" >/dev/null 2>&1 && pwd)"
-    echo "$DIR/static/$1"
+    PATH="$DIR/../src:$PATH"
 }
+

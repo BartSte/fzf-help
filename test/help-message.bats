@@ -1,5 +1,8 @@
 #!/usr/bin/env bats
 # vim: ft=bash
+bats_load_library bats-assert
+bats_load_library bats-support
+load helpers.bash
 
 get_temp() {
     local tmpdir
@@ -16,8 +19,6 @@ rm_temp() {
 }
 
 setup() {
-    load helpers.bash
-    global_setup
     rm_temp
 }
 

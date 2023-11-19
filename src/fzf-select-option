@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 usage="Usage: $(basename "$0") [-h | --help] <cmd>
 
@@ -16,6 +17,7 @@ function used for the fzf --preview option.
 where:
     options:
     -h --help   shows this help messages
+    -d --debug  
 
     positional:
     <cmd>   an existing command"
@@ -26,6 +28,10 @@ parse_args() {
             -h | --help)
                 echo "$usage"
                 exit 0
+                ;;
+            -d | --debug)
+                fzf_cmd="fzf_debug"
+                shift
                 ;;
             -*)
                 echo "Unknown option: $1"
@@ -51,10 +57,10 @@ get_command() {
 }
 
 get_fzf_help_opts() {
-    if [[ -z $FZF_HELP_OPTS ]]; then
-        FZF_HELP_OPTS="--multi --layout=reverse --preview-window=right,75%,wrap --height 80% "
-        FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
-    fi
+    local default
+    default="--multi --layout=reverse --preview-window=right,75%,wrap --height 80% "
+    default+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
+    fzf_help_opts="${FZF_HELP_OPTS:-$default}"
 }
 
 get_preview_cmd() {
@@ -70,14 +76,27 @@ remove_line_number() {
     sed "s/^.*://g"
 }
 
+fzf_debug() {
+    local msg preview_cmd_no_path
+    msg="stdin:\n$(cat -)\n"
+    shift
+    preview_cmd_no_path=${1//$dir\//}
+    msg+="\npreview cmd:\n$preview_cmd_no_path\n"
+    shift
+    msg+="\nfzf_help_opts:\n${*}"
+    echo -e "$msg"
+}
+
 cmd=""
+fzf_cmd="fzf"
+fzf_help_opts=""
 parse_args "$@"
 [[ -z $cmd ]] && echo "$usage" && exit 1
 
 get_fzf_help_opts
 
-dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
-opts="$($dir/help-message "$cmd" | $dir/cli-options)"
+dir=$(dirname "$(realpath "${BASH_SOURCE:-$0}")")
+opts="$("$dir/help-message" "$cmd" | "$dir/cli-options")"
 preview_cmd=$(get_preview_cmd)
 
-remove_line_number <<<"$opts" | fzf --prompt="$buffer" --preview "$preview_cmd" $FZF_HELP_OPTS
+remove_line_number <<<"$opts" | $fzf_cmd --preview "$preview_cmd" $fzf_help_opts
