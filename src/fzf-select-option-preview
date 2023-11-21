@@ -105,4 +105,10 @@ parse_args "$@"
 line_number=$(get_line_number "$opts" $index)
 scroll=$(get_scroll_lines $line_number)
 printf '\033[2J'
-bat -f -pp -H $line_number -r $scroll: --language=$FZF_HELP_SYNTAX
+
+show_help="-f -pp -H $line_number -r $scroll: --language=$FZF_HELP_SYNTAX"
+if which bat > /dev/null; then
+    bat $show_help
+elif which batcat > /dev/null; then
+    batcat $show_help
+fi
