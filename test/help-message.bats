@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 # vim: ft=bash
-bats_load_library bats-assert
-bats_load_library bats-support
+load test_helper/bats-assert/load
+load test_helper/bats-support/load
 load helpers.bash
 
 get_temp() {

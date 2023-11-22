@@ -201,28 +201,30 @@ This is useful when you do not like page wrapping.
 
 ## Tests
 
-To run the test make sure the following is installed:
+To run the test the following submodules need to be installed as git
+sub modules:
 
 - Install [bats-core](https://github.com/bats-core/bats-core)
 - Install [bats-assert](https://github.com/ztombol/bats-assert)
 - Install [bats-support](https://github.com/ztombol/bats-support)
 
-After this, set the `BATS_LIB_PATH` environment variable to the directories
-where the bats libraries are installed. For example:
+To install these sub modules, run the following commands:
+
+```
+git submodule init
+git submodule update
+```
+
+After this, you can use the `bats` executable in the root of the repository to
+run the tests. To run all tests, run:
 
 ```bash
-export BATS_LIB_PATH=/usr/lib:/usr/lib/bats
+./bats test
 ```
+
+here, `./bats` is a shortcut to `./test/bats/bin/bats`.
 
 For more information, see the [bats-core documentation](https://bats-core.readthedocs.io/en/stable/)
-
-To run the tests, cd to the root of the repository and run:
-
-```bash
-bats test
-```
-
-where `bats` is the bats-core executable that should be in your path.
 
 ## Troubleshooting
 
