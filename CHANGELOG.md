@@ -22,6 +22,14 @@ If a change is breaking, this is mentioned and a major version is released.
 ## Improvements
 
 - The `ag` dependency is now optional.
+- The `batcat` command is supported as an alternative to `bat`.
+- The `bat` dependency is now optional as the `cat` command is used as a
+  fallback. A warning is shown when `bat` is not installed. This warning can be
+  disabled by setting the `FZF_HELP_BAT_WARNING` environment variable to
+  `false`.
+- Unitests are added to the `test` directory.
+- The test runner called `bats` is added as a git submodule.
+- The tests are executed in as a GitHub action in a pipeline.
 
 # 2.0.1
 
