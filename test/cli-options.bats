@@ -19,7 +19,7 @@ load helpers.bash
 
 @test "Assert 'mv --help' options" {
     run cli-options <"$(static mv-help.txt)"
-    assert_output <"$(static mv-options.txt)"
+    assert_output "$(cat_static mv-options.txt)"
 }
 
 @test "Set CLI_OPTIONS_CMD" {
