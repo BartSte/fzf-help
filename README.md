@@ -34,7 +34,7 @@ one of the shells.
 Ensure that you have the following tools installed:
 
 - [fzf](https://github.com/junegunn/fzf)
-- [bat](https://www.github.com/sharkdp/bat)
+- [bat](https://www.github.com/sharkdp/bat) (optional, but recommended)
 
 On Arch, for example, you can install these tools with:
 
@@ -154,6 +154,9 @@ The following environment variables can be set to configure the behaviour of
 
   to get syntax highlighting for the `--help` documentation. Older versions of
   `bat` do not support this syntax highlighting, therefore the default is `txt`.
+
+- `FZF_HELP_BAT_WARNING`: set this variable to `false` to disable the warning
+  that is displayed when `bat` is not installed. Defaults to `true`.
 
 - `CLI_OPTIONS_CMD`: set this environment variable to the command you want to
   use to retrieve the command line options. When defining the command, ensure
