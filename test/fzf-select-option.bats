@@ -4,6 +4,15 @@ load test_helper/bats-assert/load
 load test_helper/bats-support/load
 load helpers.bash
 
+setup() {
+    file=$(static "mv-help.txt")
+    export HELP_MESSAGE_CMD="cat \"$file\""
+}
+
+teardown() {
+    unset HELP_MESSAGE_CMD
+}
+
 @test "Run with -h" {
     fzf-select-option -h
 }
