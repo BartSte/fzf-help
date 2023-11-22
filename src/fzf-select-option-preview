@@ -96,6 +96,20 @@ get_half_page() {
     echo $(($number_of_lines / 2))
 }
 
+#######################################
+# Executes the args with batcat or bat, if one of them is installed.
+#######################################
+exec_bat() {
+    if which batcat &>/dev/null; then
+        batcat "$@"
+    elif which bat &>/dev/null; then
+        bat "$@"
+    else
+        echo "Neither bat/batcat is not installed."
+        exit 1
+    fi
+}
+
 parse_args "$@"
 
 [[ -z $opts ]] && echo "Missing <opts>" && echo "$usage" && exit 1
@@ -104,11 +118,6 @@ parse_args "$@"
 [[ -z $FZF_HELP_SYNTAX ]] && FZF_HELP_SYNTAX="txt"
 line_number=$(get_line_number "$opts" $index)
 scroll=$(get_scroll_lines $line_number)
-printf '\033[2J'
 
-show_help="-f -pp -H $line_number -r $scroll: --language=$FZF_HELP_SYNTAX"
-if which bat > /dev/null; then
-    bat $show_help
-elif which batcat > /dev/null; then
-    batcat $show_help
-fi
+printf '\033[2J'
+exec_bat -f -pp -H $line_number -r $scroll: --language=$FZF_HELP_SYNTAX
