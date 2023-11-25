@@ -1,5 +1,7 @@
 # README
 
+<img src="./static/logo.svg" width=50%>
+
 ## Contents
 
 - [Introduction](#introduction)
@@ -27,7 +29,7 @@ documentation, which is displayed in a preview window. Zsh, bash and fish are
 supported. Tested on Linux, but should work on other platforms that support
 one of the shells.
 
-![demo](./demo.gif)
+![demo](./static/demo.gif)
 
 ## Dependencies
 
