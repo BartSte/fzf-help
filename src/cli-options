@@ -40,6 +40,11 @@ SHORT="($PREFIX)($TAIL)"
 
 RE="$LONG|$SHORT"
 
+# If on macOS check if GNU grep is installed as ggrep
+if [[ "$(uname)" == "Darwin" ]] && [[ "$(command -v ggrep 2>/dev/null)" ]]; then
+    GREP_CMD="ggrep"
+fi
+
 parse_args "$@"
-cli_options_cmd="${CLI_OPTIONS_CMD:-"grep -o --line-number -P -- \"$RE\""}"
+cli_options_cmd="${CLI_OPTIONS_CMD:-"${GREP_CMD:-grep} -o --line-number -P -- \"$RE\""}"
 eval "$cli_options_cmd"
