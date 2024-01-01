@@ -44,7 +44,7 @@ parse_args() {
 
 get_temp() {
     local tmpdir file
-    tmpdir=$(dirname "$(mktemp tmp.XXXXXXXXXX -ut)")
+    tmpdir=$(dirname "$(mktemp -u)")
     file="$tmpdir/fzf-help-message"
     touch "$file"
     echo "$file"

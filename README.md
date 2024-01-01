@@ -44,6 +44,15 @@ On Arch, for example, you can install these tools with:
 sudo pacman -S fzf bat
 ```
 
+### MacOS
+
+Ensure that [GNU grep](https://www.gnu.org/software/grep/) is installed and
+available either as `ggrep` or `grep`:
+
+```zsh
+brew install grep # Installs GNU grep as ggrep
+```
+
 ## Installation as root
 
 After installing the dependencies, run the following bash command to install
