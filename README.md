@@ -38,6 +38,12 @@ Ensure that you have the following tools installed:
 - [fzf](https://github.com/junegunn/fzf)
 - [bat](https://www.github.com/sharkdp/bat) (optional, but recommended)
 
+On Arch, for example, you can install these tools with:
+
+```zsh
+sudo pacman -S fzf bat
+```
+
 ### MacOS
 
 Ensure that [GNU grep](https://www.gnu.org/software/grep/) is installed and
@@ -45,12 +51,6 @@ available either as `ggrep` or `grep`:
 
 ```zsh
 brew install grep # Installs GNU grep as ggrep
-```
-
-On Arch, for example, you can install these tools with:
-
-```zsh
-sudo pacman -S fzf bat
 ```
 
 ## Installation as root
