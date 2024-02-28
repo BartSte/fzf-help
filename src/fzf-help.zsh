@@ -1,4 +1,4 @@
-this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
+_fzf_help_directory=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 
 ##############################################################################
 # fzf-help-widget
@@ -10,7 +10,7 @@ this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 fzf-help-widget() {
     [[ -z $BUFFER ]] && { zle reset-prompt; return }
 
-    local opts=$(echo $BUFFER | $this_dir/fzf-select-option | tr "\n" " ")
+    local opts=$(echo $BUFFER | $_fzf_help_directory/fzf-select-option | tr "\n" " ")
     BUFFER="$BUFFER$opts"
 
     local ret=$?

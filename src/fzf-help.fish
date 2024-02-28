@@ -1,4 +1,4 @@
-set this_dir (dirname (realpath (status filename)))
+set _fzf_help_directory (dirname (realpath (status filename)))
 
 ##############################################################################
 # fzf-help-widget
@@ -12,7 +12,7 @@ function fzf-help-widget
     return
   end
   set -l cmd (echo -n (commandline|string collect))
-  set -l opts (echo -n (commandline|string collect)| $this_dir/fzf-select-option | tr "\n" " "|string collect)
+  set -l opts (echo -n (commandline|string collect)| $_fzf_help_directory/fzf-select-option | tr "\n" " "|string collect)
   commandline -r -- $cmd$opts
   commandline -f repaint
   return $status

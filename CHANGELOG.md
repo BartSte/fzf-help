@@ -12,6 +12,15 @@ user. A change is always categorized based on the following types:
 
 If a change is breaking, this is mentioned and a major version is released.
 
+# 2.1.1
+
+## Bug
+
+- The fzf-help.bash/fish/zsh files are sourced by the user. These files
+  contained a global variable called `this_dir`, which can get in the way of
+  other scripts, as it is not very unique. The variable is now renamed to
+  `_fzf_help_directory`.
+
 # 2.1.0
 
 ## Features
@@ -25,8 +34,7 @@ If a change is breaking, this is mentioned and a major version is released.
 - The `batcat` command is supported as an alternative to `bat`.
 - The `bat` dependency is now optional as the `cat` command is used as a
   fallback. A warning is shown when `bat` is not installed. This warning can be
-  disabled by setting the `FZF_HELP_BAT_WARNING` environment variable to
-  `false`.
+  disabled by setting the `FZF_HELP_BAT_WARNING` environment variable to `false`.
 - Unitests are added to the `test` directory.
 - The test runner called `bats` is added as a git submodule.
 - The tests are executed in as a GitHub action in a pipeline.
@@ -42,15 +50,15 @@ If a change is breaking, this is mentioned and a major version is released.
 
 ## Features
 
-- Added FZF_HELP_SYNTAX environment variable to configure the syntax highlighting
-  of the fzf preview window.
+- Added FZF_HELP_SYNTAX environment variable to configure the syntax
+  highlighting of the fzf preview window.
 - Added support for the fish shell.
 
 ## Improvements
 
-- **Breaking**: Refactored the install and uninstall scripts. The install directory is now
-  `/usr/share/fzf-help` for root installations and `$HOME/.local/share/fzf-help`
-  for user installations, independent of the shell.
+- **Breaking**: Refactored the install and uninstall scripts. The install
+  directory is now `/usr/share/fzf-help` for root installations and
+  `$HOME/.local/share/fzf-help` for user installations, independent of the shell.
 
 # 1.1.0
 

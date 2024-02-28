@@ -1,4 +1,4 @@
-this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
+_fzf_help_directory=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 
 ##############################################################################
 # fzf-help-widget
@@ -10,7 +10,7 @@ this_dir=$(dirname $(realpath ${BASH_SOURCE:-$0}))
 fzf-help-widget() {
     [[ -z $READLINE_LINE ]] && { return; }
 
-    local opts=$(echo $READLINE_LINE | $this_dir/fzf-select-option | tr "\n" " ")
+    local opts=$(echo $READLINE_LINE | $_fzf_help_directory/fzf-select-option | tr "\n" " ")
     READLINE_LINE="$READLINE_LINE$opts"
     READLINE_POINT=${#READLINE_LINE}
 
