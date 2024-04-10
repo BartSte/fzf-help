@@ -12,6 +12,12 @@ user. A change is always categorized based on the following types:
 
 If a change is breaking, this is mentioned and a major version is released.
 
+# 2.1.2
+
+## Improvements
+
+- Added PKGBUILD for Arch Linux.
+
 # 2.1.1
 
 ## Bug

@@ -1,2 +1,4 @@
 nvim.shada
 Session.vim
+*.pkg.tar.zst
+pkg
