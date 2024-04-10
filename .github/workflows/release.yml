@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Publish AUR package
-        uses: KSXGitHub/github-actions-deploy-aur@fzf-help
+        uses: KSXGitHub/github-actions-deploy-aur@v2.7.1
         with:
           pkgname: fzf-help
           pkgbuild: ./PKGBUILD
