@@ -5,6 +5,7 @@
 ## Contents
 
 <!--toc:start-->
+
 - [Introduction](#introduction)
 - [Dependencies](#dependencies)
   - [MacOS](#macos)
@@ -144,6 +145,10 @@ bind \ca fzf-help-widget
 ```
 
 ### With package manager
+
+The package managers specified below will install `fzf-help` as root. To
+configure the key bindings, follow the instructions in the [Manual as
+root](#manual-as-root) section for your shell.
 
 #### Arch Linux
 
