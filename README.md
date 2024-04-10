@@ -142,6 +142,16 @@ source $HOME/.local/share/fzf-help/fzf-help.fish
 bind \ca fzf-help-widget
 ```
 
+## Installation with a package manager
+
+### Arch Linux
+
+You can install `fzf-help` from the AUR using for example `yay`:
+
+```bash
+yay -S fzf-help
+```
+
 ## Configuration
 
 The following environment variables can be set to configure the behaviour of
