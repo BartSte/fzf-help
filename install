@@ -55,14 +55,17 @@ install() {
 
     makedir="mkdir -p $plugin_dir || abort"
     copy="cp $this_dir/src/* $plugin_dir || abort"
+    copy_uninstall="cp $this_dir/uninstall $plugin_dir || abort"
     if $root; then
         echo "Installing as root"
         eval "sudo $makedir"
         eval "sudo $copy"
+        eval "sudo $copy_uninstall"
     else
         echo "Installing as user"
-        eval $makedir
-        eval $copy
+        eval "$makedir"
+        eval "$copy"
+        eval "$copy_uninstall"
     fi
 
     echo 'Installation complete.'
