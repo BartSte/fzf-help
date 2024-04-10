@@ -4,22 +4,21 @@
 
 ## Contents
 
+<!--toc:start-->
 - [Introduction](#introduction)
 - [Dependencies](#dependencies)
-- [Installation as root](#installation-as-root)
-  - [zsh](#zsh)
-  - [bash](#bash)
-  - [fish](#fish)
-- [Installation as user](#installation-as-user)
-  - [zsh](#zsh-1)
-  - [bash](#bash-1)
-  - [fish](#fish-1)
+  - [MacOS](#macos)
+- [Installation](#installation)
+  - [Manual as root](#manual-as-root)
+  - [Manual as user](#manual-as-user)
+  - [With package manager](#with-package-manager)
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [Tests](#tests)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
+<!--toc:end-->
 
 ## Introduction
 
@@ -53,7 +52,9 @@ available either as `ggrep` or `grep`:
 brew install grep # Installs GNU grep as ggrep
 ```
 
-## Installation as root
+## Installation
+
+### Manual as root
 
 After installing the dependencies, run the following bash command to install
 `fzf-help` in the `/usr/share/fzf-help` directory:
@@ -65,7 +66,7 @@ bash -c 'tmp_dir=$(mktemp -d); git clone https://github.com/BartSte/fzf-help.git
 The following sections describe how to setup the key bindings for the
 supported shells.
 
-## zsh
+#### zsh
 
 After installation, add the following to your `.zshrc` file:
 
@@ -78,7 +79,7 @@ bindkey "^A" fzf-help-widget
 which will bind the `fzf-help-widget` to the `ctrl-a`, which you should trigger
 after typing the command you want to get help for.
 
-## bash
+#### bash
 
 After installation, you can add the following to your `.bashrc` file:
 
@@ -90,7 +91,7 @@ bind -x '"\C-a": fzf-help-widget'
 which will bind the `fzf-help-widget` to the `ctrl-a`, which you should trigger
 after typing the command you want to get help for.
 
-## fish
+#### fish
 
 After installation, you can add the following to your
 `~/.config/fish/config.fish` file:
@@ -103,7 +104,7 @@ bind \ca fzf-help-widget
 which will bind the `fzf-help-widget` to the `ctrl-a`, which you should trigger
 after typing the command you want to get help for.
 
-## Installation as user
+### Manual as user
 
 Run the following command to install `fzf-help` in the
 `$HOME/.local/share/fzf-help` directory. Use this if you do not have root
@@ -113,7 +114,7 @@ access.
 bash -c 'tmp_dir=$(mktemp -d); git clone https://github.com/BartSte/fzf-help.git $tmp_dir; $tmp_dir/install --user; rm -rf $tmp_dir;'
 ```
 
-### zsh
+#### zsh
 
 If you use zsh, add the following to your `.zshrc` file:
 
@@ -123,7 +124,7 @@ zle -N fzf-help-widget
 bindkey "^A" fzf-help-widget
 ```
 
-### bash
+#### bash
 
 If you use bash, you can add the following to your `.bashrc` file:
 
@@ -132,7 +133,7 @@ source $HOME/.local/share/fzf-help/fzf-help.bash
 bind -x '"\C-a": fzf-help-widget'
 ```
 
-### fish
+#### fish
 
 If you use fish, you can add the following to your
 `~/.config/fish/config.fish` file:
@@ -142,9 +143,9 @@ source $HOME/.local/share/fzf-help/fzf-help.fish
 bind \ca fzf-help-widget
 ```
 
-## Installation with a package manager
+### With package manager
 
-### Arch Linux
+#### Arch Linux
 
 You can install `fzf-help` from the AUR using for example `yay`:
 
