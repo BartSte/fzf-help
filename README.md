@@ -152,10 +152,6 @@ root](#manual-as-root) section for your shell.
 
 #### Arch Linux
 
-> TODO: currently, the package is not removed properly when it is removed by the
-> package manager. As a workaround, you can run the [uninstall](./uninstall)
-> script.
-
 You can install `fzf-help` from the AUR using for example `yay`:
 
 ```bash
