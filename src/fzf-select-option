@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+_fzf_help_directory=$(dirname $(realpath "${BASH_SOURCE:-$0}"))
+source "$_fzf_help_directory"/fzf-help-log
+
 usage="Usage: $(basename "$0") [-h | --help] <cmd>
 
 Displays the cli options for <cmd> using fzf, allowing the user to select one

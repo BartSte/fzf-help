@@ -218,6 +218,12 @@ The following environment variables can be set to configure the behaviour of
   Defaults to `$cmd --help`. You can use `man -P cat $cmd` if you want to use the
   man page instead of the `--help` documentation.
 
+- `FZF_HELP_LOG`: the path to the log file. Defaults to
+  `~/.local/state/fzf-help.log`.
+
+- `FZF_HELP_LOG_LINES`: the number of lines to keep in the log file. Defaults to
+  `10000`.
+
 ## Usage
 
 As the demo shows, you can use `fzf-help` by typing `ctrl-a` after typing the
