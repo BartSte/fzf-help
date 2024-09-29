@@ -185,6 +185,16 @@ The following environment variables can be set to configure the behaviour of
 - `FZF_HELP_BAT_WARNING`: set this variable to `false` to disable the warning
   that is displayed when `bat` is not installed. Defaults to `true`.
 
+- `HELP_MESSAGE_CMD`: controls which command is used to retrieve the command
+  line options. Here, the `$cmd` variable is the command to get the options for.
+  Defaults to `$cmd --help`. You can use `man -P cat $cmd` if you want to use the
+  man page instead of the `--help` documentation.
+
+- `HELP_MESSAGE_RC`: set this environment variable to a file you want to be
+  sourced before getting the help message. Typically, this file will contain
+  aliases and functions from which you may want to get the help message. When
+  this variable is set, alias expansion is also enabled.
+
 - `CLI_OPTIONS_CMD`: set this environment variable to the command you want to
   use to retrieve the command line options. When defining the command, ensure
   that the output is in the form of: the line number on which the option was
@@ -212,11 +222,6 @@ The following environment variables can be set to configure the behaviour of
   ```bash
   export CLI_OPTIONS_CMD='ag -o --numbers -- $RE'
   ```
-
-- `HELP_MESSAGE_CMD`: controls which command is used to retrieve the command
-  line options. Here, the `$cmd` variable is the command to get the options for.
-  Defaults to `$cmd --help`. You can use `man -P cat $cmd` if you want to use the
-  man page instead of the `--help` documentation.
 
 - `FZF_HELP_LOG`: the path to the log file. Defaults to
   `~/.local/state/fzf-help.log`.

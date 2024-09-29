@@ -45,22 +45,21 @@ parse_args() {
     done
 }
 
-get_temp() {
-    local tmpdir file
-    tmpdir=$(dirname "$(mktemp -u)")
-    file="$tmpdir/fzf-help-message"
-    touch "$file"
-    echo "$file"
-}
-
-fzf_help_log "--- New run ---"
-fzf_help_log "Time: $(date)"
-
 cmd=""
 parse_args "$@"
-help_message=$(get_temp)
+
+help_message=$("$_fzf_help_directory"/make-temp "fzf-help-message")
 help_message_cmd="${HELP_MESSAGE_CMD:-$cmd --help}"
+help_message_rc="${HELP_MESSAGE_RC:-""}"
 fzf_help_log "Help command is: $help_message_cmd"
+fzf_help_log "Help message file is: $help_message"
+fzf_help_log "Aliases: $help_message_rc"
+
+if [ -f "$help_message_rc" ]; then
+    shopt -s expand_aliases
+    . "$help_message_rc"
+fi
+    
 
 [[ $cmd ]] && { eval "$help_message_cmd" >"$help_message" || true; }
 

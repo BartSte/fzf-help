@@ -90,6 +90,9 @@ fzf_debug() {
     echo -e "$msg"
 }
 
+fzf_help_log "--- New run ---"
+fzf_help_log "Time: $(date)"
+
 cmd=""
 fzf_cmd="fzf"
 fzf_help_opts=""

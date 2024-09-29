@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+name=$1
+tmpdir=$(dirname "$(mktemp -u)")
+file="$tmpdir/$name"
+touch "$file"
+echo "$file"
