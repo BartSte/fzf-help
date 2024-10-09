@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+_fzf_help_directory=$(dirname $(realpath "${BASH_SOURCE:-$0}"))
+source "$_fzf_help_directory"/fzf-help-log
+
 usage="Usage: $(basename "$0") [-h | --help] <cmd>
 
 Evaluates the HELP_MESSAGE_CMD environment variable and writes the result to
@@ -42,19 +45,22 @@ parse_args() {
     done
 }
 
-get_temp() {
-    local tmpdir file
-    tmpdir=$(dirname "$(mktemp -u)")
-    file="$tmpdir/fzf-help-message"
-    touch "$file"
-    echo "$file"
-}
-
 cmd=""
 parse_args "$@"
-help_message=$(get_temp)
+
+help_message=$("$_fzf_help_directory"/make-temp "fzf-help-message")
 help_message_cmd="${HELP_MESSAGE_CMD:-$cmd --help}"
+help_message_rc="${HELP_MESSAGE_RC:-""}"
+fzf_help_log "Help command is: $help_message_cmd"
+fzf_help_log "Help message file is: $help_message"
+fzf_help_log "Aliases: $help_message_rc"
+
+if [ -f "$help_message_rc" ]; then
+    shopt -s expand_aliases
+    . "$help_message_rc"
+fi
+    
 
 [[ $cmd ]] && { eval "$help_message_cmd" >"$help_message" || true; }
 
-cat "$help_message"
+cat "$help_message" > /dev/stdout

@@ -1,7 +1,7 @@
 # Maintainer: BartSte bartsteensma@outlook.com
 
 pkgname=fzf-help
-pkgver=2.1.2
+pkgver=2.2.0
 pkgrel=2
 pkgdesc="Use fzf to select command line options from --help"
 arch=('any')

@@ -1,0 +1,48 @@
+#!/bin/bash
+
+################################################################################
+# Logger 
+#
+# Logs messages to the file at `FZF_HELP_LOG_PATH`. If the variable is not set,
+# the log file will be created at `~/.local/state/fzf-help.log`. The log file
+# will be truncated to the last `FZF_HELP_LOG_LINES` lines (default 10000).
+fzf_help_log() {
+    local message fzf_help_log_path fzf_help_log_lines
+
+    message=$1
+    fzf_help_log_path=${FZF_HELP_LOG_PATH:-~/.local/state/fzf-help.log}
+    fzf_help_log_lines=${FZF_HELP_LOG_LINES:-10000}
+
+    _fifo_log "$fzf_help_log_path" "$fzf_help_log_lines" "$message"
+}
+
+################################################################################
+# _fifo_log
+# 
+# Appends messages to the log file at `path`. If the file does not exist, it
+# will be created. If the number of lines in the log file exceeds the value of
+# `max_lines` then the log file will be truncated to the last `max_lines` lines. 
+################################################################################
+_fifo_log() {
+    local path max_lines message
+
+    path=$1
+    max_lines=$2
+    message=$3
+
+    if [ ! -f "$path" ]; then
+        mkdir -p "$(dirname "$path")"
+        touch "$path"
+    fi
+
+    echo "$message" >> "$path"
+
+    if grep -E "^/dev/(null|stdout|stderr)$" <<< "$path" ; then
+        return
+    fi
+
+    if [ $(wc -l < "$path") -gt "$max_lines" ]; then
+        tail -n "$max_lines" "$path" > "$path".tmp
+        mv "$path".tmp "$path"
+    fi
+}

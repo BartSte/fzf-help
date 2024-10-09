@@ -10,5 +10,6 @@ setup_suite() {
     unset FZF_HELP_SYNTAX
     unset CLI_OPTIONS_CMD
     unset HELP_MESSAGE_CMD
+    unset HELP_MESSAGE_RC
 }
 
