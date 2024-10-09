@@ -24,13 +24,14 @@ fzf_help_log() {
 # `max_lines` then the log file will be truncated to the last `max_lines` lines. 
 ################################################################################
 _fifo_log() {
-    local path max_lines message is_dev
+    local path max_lines message
 
     path=$1
     max_lines=$2
     message=$3
 
     if [ ! -f "$path" ]; then
+        mkdir -p "$(dirname "$path")"
         touch "$path"
     fi
 
