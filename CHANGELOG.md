@@ -12,6 +12,20 @@ user. A change is always categorized based on the following types:
 
 If a change is breaking, this is mentioned and a major version is released.
 
+# 2.3.0
+
+## Bug
+
+- Fix PKGBUILD.
+
+# 2.2.0
+
+## Features
+
+- added support for aliases by allowing a script to be sourced before getting
+  the help message.
+- Added logger.
+
 # 2.1.2
 
 ## Improvements
