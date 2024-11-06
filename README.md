@@ -61,7 +61,7 @@ After installing the dependencies, run the following bash command to install
 `fzf-help` in the `/usr/share/fzf-help` directory:
 
 ```bash
-bash -c 'tmp_dir=$(mktemp -d); git clone https://github.com/BartSte/fzf-help.git $tmp_dir; $tmp_dir/install; rm -rf $tmp_dir;'
+bash -c 'tmp_dir=$(mktemp -d); GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/BartSte/fzf-help.git $tmp_dir; $tmp_dir/install; rm -rf $tmp_dir;'
 ```
 
 The following sections describe how to setup the key bindings for the
