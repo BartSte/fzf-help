@@ -1,0 +1,12 @@
+Source: fzf-help
+Maintainer: BartSte <bartsteensma@outlook.com>
+Section: utils
+Priority: optional
+Standards-Version: 4.5.0
+Build-Depends: debhelper (>= 12), git
+
+Package: fzf-help
+Architecture: all
+Depends: fzf, bat, ${misc:Depends}
+Description: Use fzf to select command line options from --help
+Homepage: https://github.com/BartSte/fzf-help
