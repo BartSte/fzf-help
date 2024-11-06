@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage="
+Usage: make-pkgbuild <version>
+
+This script emits a PKGBUILD file to stdout.
+
+Options:
+  -h, --help    Show this help message and exit.
+"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            echo "$usage"
+            exit 0
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+if [[ $# -ne 1 ]]; then
+    echo "Error: Invalid number of arguments."
+    echo "$usage"
+    exit 1
+fi
+
+################################################################################
+# Ensure the version is in the format of:
+#   - [0-9]+\.[0-9]+\.[0-9]+
+# A leading 'v' is allowed but is removed, otherwise an error is thrown.
+################################################################################
+assert_version() {
+    local version="$1"
+    if [[ ! "$version" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "Error: Invalid version format: $version" >&2
+        exit 1
+    else
+        sed 's/^v//' <<< "$version"
+    fi
+}
+
+################################################################################
+# Generate
+# The version for the PKGBUILD is read from stdin.
+################################################################################
+generate() {
+    local version
+    version="$(cat -)"
+
+    if [[ -z "$version" ]]; then
+        echo "Error: Version is invalid." >&2
+        exit 1
+    fi
+
+    echo "# Maintainer: BartSte bartsteensma@outlook.com
+
+    pkgname=fzf-help
+    pkgver=$version
+    pkgrel=1
+    pkgdesc=\"Use fzf to select command line options from --help\"
+    arch=('any')
+    url=\"https://github.com/BartSte/fzf-help\"
+    license=('MIT')
+    depends=('fzf' 'bat')
+    source=(\"\$pkgname::git+https://github.com/BartSte/fzf-help.git\")
+    md5sums=('SKIP')
+    changelog=\"CHANGELOG.md\"
+
+    package() {
+      cd \"\$srcdir/\$pkgname\"
+      install -Dm644 LICENCE -t \"\${pkgdir}/usr/share/licenses/\${pkgname}\"
+      install -dm755 \"\${pkgdir}/usr/share/\${pkgname}\"
+      cp -dr --no-preserve=ownership {src/*,uninstall} \"\${pkgdir}/usr/share/\${pkgname}\"
+    }"
+}
+
+assert_version "$1" | generate
