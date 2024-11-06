@@ -29,7 +29,7 @@ documentation, which is displayed in a preview window. Zsh, bash and fish are
 supported. Tested on Linux, but should work on other platforms that support
 one of the shells.
 
-![demo](./static/demo.gif)
+![demo](https://media.githubusercontent.com/media/BartSte/fzf-help/refs/heads/21-demo-is-included-during-installation/static/demo.gif)
 
 ## Dependencies
 
