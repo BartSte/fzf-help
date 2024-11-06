@@ -1,0 +1,115 @@
+fzf-help (2.3.0-1) stable; urgency=medium
+
+  * Bug: Fixed PKGBUILD issue.
+
+ -- BartSte <bartsteensma@outlook.com>  Wed, 06 Nov 2024 12:00:00 +0000
+
+fzf-help (2.2.0-1) stable; urgency=medium
+
+  * Feature: Added support for aliases by allowing a script to be sourced 
+    before getting the help message.
+  * Feature: Added logger.
+
+ -- BartSte <bartsteensma@outlook.com>  Tue, 05 Nov 2024 12:00:00 +0000
+
+fzf-help (2.1.2-1) stable; urgency=medium
+
+  * Improvement: Added PKGBUILD for Arch Linux.
+
+ -- BartSte <bartsteensma@outlook.com>  Mon, 04 Nov 2024 12:00:00 +0000
+
+fzf-help (2.1.1-1) stable; urgency=medium
+
+  * Bug: Renamed global variable `this_dir` to `_fzf_help_directory` to avoid 
+    conflicts with other scripts.
+
+ -- BartSte <bartsteensma@outlook.com>  Sun, 03 Nov 2024 12:00:00 +0000
+
+fzf-help (2.1.0-1) stable; urgency=medium
+
+  * Feature: Added CLI_OPTIONS_CMD variable to configure the command used 
+    by the cli-options script.
+  * Improvement: Made `ag` dependency optional.
+  * Improvement: Supported `batcat` as an alternative to `bat`.
+  * Improvement: Made `bat` dependency optional, using `cat` as a fallback. 
+    Added warning if `bat` is not installed, with option to disable it via 
+    FZF_HELP_BAT_WARNING.
+  * Improvement: Added unit tests to `test` directory.
+  * Improvement: Integrated GitHub Actions pipeline for tests.
+
+ -- BartSte <bartsteensma@outlook.com>  Sat, 02 Nov 2024 12:00:00 +0000
+
+fzf-help (2.0.1-1) stable; urgency=medium
+
+  * Bug: Set default value of `FZF_HELP_SYNTAX` to `help` instead of `txt` 
+    for older versions of `bat`.
+
+ -- BartSte <bartsteensma@outlook.com>  Fri, 01 Nov 2024 12:00:00 +0000
+
+fzf-help (2.0.0-1) stable; urgency=medium
+
+  * Feature: Added FZF_HELP_SYNTAX environment variable to configure syntax 
+    highlighting in the fzf preview window.
+  * Feature: Added support for fish shell.
+  * Improvement: **Breaking** - Refactored install and uninstall scripts. 
+    Install directory changed to `/usr/share/fzf-help` for root installations 
+    and `$HOME/.local/share/fzf-help` for user installations.
+
+ -- BartSte <bartsteensma@outlook.com>  Thu, 31 Oct 2024 12:00:00 +0000
+
+fzf-help (1.1.0-1) stable; urgency=medium
+
+  * Feature: Added user installation option.
+
+ -- BartSte <bartsteensma@outlook.com>  Wed, 30 Oct 2024 12:00:00 +0000
+
+fzf-help (1.0.1-1) stable; urgency=medium
+
+  * Bug: Added `--bash` option to uninstall script.
+
+ -- BartSte <bartsteensma@outlook.com>  Tue, 29 Oct 2024 12:00:00 +0000
+
+fzf-help (1.0.0-1) stable; urgency=medium
+
+  * Feature: Added support for short options (-h).
+  * Improvement: Options are selected by index in the opts list for faster, 
+    more reliable selection. Duplicate options allowed for scrolling through 
+    each option’s preview window.
+  * Improvement: Renamed commands and environment variables to be more descriptive.
+  * Improvement: Renamed `bat-cli-options` to `fzf-select-option-preview`.
+
+ -- BartSte <bartsteensma@outlook.com>  Mon, 28 Oct 2024 12:00:00 +0000
+
+fzf-help (0.4-1) stable; urgency=medium
+
+  * Feature: Added support for both bash and zsh.
+
+ -- BartSte <bartsteensma@outlook.com>  Sun, 27 Oct 2024 12:00:00 +0000
+
+fzf-help (0.3-1) stable; urgency=medium
+
+  * Feature: Added `--multi` option to fzf.
+
+ -- BartSte <bartsteensma@outlook.com>  Sat, 26 Oct 2024 12:00:00 +0000
+
+fzf-help (0.2-1) stable; urgency=medium
+
+  * Feature: Added syntax highlighting for `bat-cli-options`.
+
+ -- BartSte <bartsteensma@outlook.com>  Fri, 25 Oct 2024 12:00:00 +0000
+
+fzf-help (0.1-1) stable; urgency=medium
+
+  * Feature: Added `$CLI_OPTIONS_CMD` variable.
+  * Bug: Made shebangs compatible with macOS.
+  * Bug: Fixed zsh compatibility by replacing LBUFFER with BUFFER in `fzf-help.zsh`.
+
+ -- BartSte <bartsteensma@outlook.com>  Thu, 24 Oct 2024 12:00:00 +0000
+
+fzf-help (0.0-1) stable; urgency=medium
+
+  * Feature: Added `cli-options`, `bat-cli-options`, and `fzf-select-options`.
+  * Feature: Added right-bottom-toggle for preview window.
+
+ -- BartSte <bartsteensma@outlook.com>  Wed, 23 Oct 2024 12:00:00 +0000
+
