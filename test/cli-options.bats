@@ -27,3 +27,8 @@ load helpers.bash
     run cli-options <"$(static mv-help.txt)"
     assert_output "foo"
 }
+
+@test "Assert edge cases" {
+    run cli-options <"$(static edge-cases.txt)"
+    assert_output "$(cat_static edge-cases-options.txt)"
+}
