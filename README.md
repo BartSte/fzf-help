@@ -13,8 +13,8 @@
   - [Manual as root](#manual-as-root)
   - [Manual as user](#manual-as-user)
   - [With package manager](#with-package-manager)
-- [Configuration](#configuration)
 - [Usage](#usage)
+- [Configuration](#configuration)
 - [Tests](#tests)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
@@ -158,6 +158,19 @@ You can install `fzf-help` from the AUR using for example `yay`:
 yay -S fzf-help
 ```
 
+## Usage
+
+As the demo shows, you can use `fzf-help` by typing `ctrl-a` after typing the
+command you want to get help for. This will open `fzf` with a list of options
+and the `--help` documentation in the preview window. You can press `ctrl-a`
+again to toggle the preview window to the bottom or the right of the widget.
+This is useful when you do not like page wrapping.
+
+Note that only the following option formats are supported at the moment:
+
+- short options: `-o` or `-O`
+- long options: `--option`
+
 ## Configuration
 
 The following environment variables can be set to configure the behaviour of
@@ -228,14 +241,6 @@ The following environment variables can be set to configure the behaviour of
 
 - `FZF_HELP_LOG_LINES`: the number of lines to keep in the log file. Defaults to
   `10000`.
-
-## Usage
-
-As the demo shows, you can use `fzf-help` by typing `ctrl-a` after typing the
-command you want to get help for. This will open `fzf` with a list of options
-and the `--help` documentation in the preview window. You can press `ctrl-a`
-again to toggle the preview window to the bottom or the right of the widget.
-This is useful when you do not like page wrapping.
 
 ## Tests
 
