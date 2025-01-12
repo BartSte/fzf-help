@@ -1,6 +1,27 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+usage="Usage: make-temp <name>
+
+A cross-platform way to create a temporary file. The file is created in a
+temporary directory and the path to the file is printed to stdout.
+
+Arguments:
+  <name>  The name of the temporary file to create.
+
+Options:
+  -h, --help  Display this help message."
+
+if [[ $# -eq 0 ]]; then
+    echo "$usage"
+    exit 1
+fi
+
+if [[ $1 == "-h" || $1 == "--help" ]]; then
+    echo "$usage"
+    exit 0
+fi
+
 name=$1
 tmpdir=$(dirname "$(mktemp -u)")
 file="$tmpdir/$name"
