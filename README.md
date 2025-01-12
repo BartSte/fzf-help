@@ -195,9 +195,6 @@ The following environment variables can be set to configure the behaviour of
   to get syntax highlighting for the `--help` documentation. Older versions of
   `bat` do not support this syntax highlighting, therefore the default is `txt`.
 
-- `FZF_HELP_BAT_WARNING`: set this variable to `false` to disable the warning
-  that is displayed when `bat` is not installed. Defaults to `true`.
-
 - `HELP_MESSAGE_CMD`: controls which command is used to retrieve the command
   line options. Here, the `$cmd` variable is the command to get the options for.
   Defaults to `$cmd --help`. You can use `man -P cat $cmd` if you want to use the

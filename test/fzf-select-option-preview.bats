@@ -36,7 +36,6 @@ load helpers.bash
 @test "Run on mv, set env variables" {
     local help opts index
     export FZF_HELP_SYNTAX="man"
-    export FZF_HELP_BAT_WARNING=false
 
     help="$(static mv-help.txt)"
     opts="$(cat_static mv-options.txt)"

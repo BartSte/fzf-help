@@ -52,9 +52,6 @@ scroll:
 fzf_help_syntax:
 man
 
-show_bat_warning:
-false
-
 stdout:
 Usage: mv [OPTION]... [-T] SOURCE DEST
   or:  mv [OPTION]... SOURCE... DIRECTORY

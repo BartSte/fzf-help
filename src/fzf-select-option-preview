@@ -3,9 +3,9 @@ set -euo pipefail
 
 usage="Usage: $(basename "$0") [-h | --help] <opts> <index>
 
-Uses bat to display the help message from stdin. The command line options are
-provided as argument <opts>, where the nth value (<index>) of these options is
-highlighted in the help message. 
+Uses bat to display the help message from stdin (cat is used as fallback). The
+command line options are provided as argument <opts>, where the nth value
+(<index>) of these options is highlighted in the help message. 
 
 stdin can, for example, be the output of the \`--help\` command of a program.
 
@@ -29,36 +29,27 @@ positional:
     <opts>  the command line options
     <index> the index of the option to highlight"
 
-bat_warning="
-##############################################################################
-Warning: bat/batcat is not installed. Using cat instead. By installing
-bat/batcat, you can get syntax highlighting, automatic scrolling and the
-selected option will be highlighted. To disable this warning, set the
-environment variable FZF_HELP_BAT_WARNING to false.
-##############################################################################
-"
-
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
-            -h | --help)
+        -h | --help)
+            echo "$usage"
+            exit 0
+            ;;
+        -d | --debug)
+            debug=true
+            ;;
+        *)
+            if [[ -z $opts ]]; then
+                opts="$1"
+            elif [[ -z $index ]]; then
+                index="$1"
+            else
+                echo "Unknown argument: $1"
                 echo "$usage"
-                exit 0
-                ;;
-            -d | --debug)
-                debug=true
-                ;;
-            *)
-                if [[ -z $opts ]]; then
-                    opts="$1"
-                elif [[ -z $index ]]; then
-                    index="$1"
-                else
-                    echo "Unknown argument: $1"
-                    echo "$usage"
-                    exit 1
-                fi
-                ;;
+                exit 1
+            fi
+            ;;
         esac
         shift
     done
@@ -110,16 +101,6 @@ get_half_page() {
     echo $(($number_of_lines / 2))
 }
 
-#######################################
-# Prints the bat warning message to stderr, if the environment variable
-# FZF_HELP_BAT_WARNING is set to true.
-#######################################
-print_bat_warning() {
-    if [[ $show_bat_warning == "true" ]]; then
-        echo "$bat_warning" >&2
-    fi
-}
-
 print_debug_info() {
     local msg
     msg+="\nopts:\n$opts\n"
@@ -127,16 +108,13 @@ print_debug_info() {
     msg+="\nline_number:\n$line_number\n"
     msg+="\nscroll:\n$scroll\n"
     msg+="\nfzf_help_syntax:\n$fzf_help_syntax\n"
-    msg+="\nshow_bat_warning:\n$show_bat_warning\n"
     msg+="\nstdout:\n$(cat -)\n"
     echo -e "$msg"
 }
 
 #######################################
 # Executes the args with batcat or bat, if one of them is installed. If none of
-# them is installed, cat is used instead. If the environment variable
-# FZF_HELP_BAT_WARNING is set to false, the warning message is not printed
-# to stderr.
+# them is installed, cat is used instead.
 #######################################
 exec_bat() {
     if $debug; then
@@ -146,7 +124,6 @@ exec_bat() {
     elif which bat &>/dev/null; then
         bat "$@"
     else
-        print_bat_warning
         cat
     fi
 }
@@ -156,7 +133,6 @@ index=""
 debug=false
 parse_args "$@"
 fzf_help_syntax="${FZF_HELP_SYNTAX:-txt}"
-show_bat_warning="${FZF_HELP_BAT_WARNING:-true}"
 
 [[ -z $opts ]] && echo "Missing <opts>" && echo "$usage" && exit 1
 [[ -z $index ]] && echo "Missing <index>" && echo "$usage" && exit 1
