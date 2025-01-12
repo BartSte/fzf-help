@@ -17,6 +17,7 @@ If a change is breaking, this is mentioned and a major version is released.
 ## Bug
 
 - Gif is not downloaded anymore during manual installation.
+- Options started at the beginning of the line were not included in regex.
 
 # 2.3.0
 
