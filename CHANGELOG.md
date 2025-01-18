@@ -12,6 +12,13 @@ user. A change is always categorized based on the following types:
 
 If a change is breaking, this is mentioned and a major version is released.
 
+# 2.3.2
+
+## Bug
+
+- The `.gitattributes` file for `git lfs` now ensures that the lfs files are
+  not downloaded by default, as this caused the AUR PKGBUILD to fail.
+
 # 2.3.1
 
 ## Bug
