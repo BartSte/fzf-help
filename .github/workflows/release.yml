@@ -1,4 +1,4 @@
-iame: aur-publish
+name: aur-publish
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
 
       - name: Generate PKGBUILD
         run: |
-          deploy/make-pkgbuild ${{ github.ref }} > PKGBUILD
+          deploy/make-pkgbuild $(echo $GITHUB_REF | sed 's/refs\/tags\///') > PKGBUILD
 
       - name: Publish AUR package
         uses: KSXGitHub/github-actions-deploy-aur@v3.0.1
