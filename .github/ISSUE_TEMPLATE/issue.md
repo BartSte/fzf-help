@@ -10,6 +10,6 @@ assignees: ''
 
 <!-- Describe the change or the problem. -->
 
-## Test status
+## Test procedure
 
-<!-- State the tests that you ran. If you did not run tests, state why. -->
+<!-- Describe the steps for a test of the change. -->
