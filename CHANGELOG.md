@@ -12,6 +12,13 @@ user. A change is always categorized based on the following types:
 
 If a change is breaking, this is mentioned and a major version is released.
 
+# 2.3.3
+
+## Task
+
+- The AUR package now downloads the release tag.
+- The release process and repository templates are updated.
+
 # 2.3.2
 
 ## Bug

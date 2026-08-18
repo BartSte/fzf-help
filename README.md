@@ -2,13 +2,15 @@
 
 <img src="./static/logo.svg" width=50%>
 
+[![Tests](https://github.com/BartSte/fzf-help/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/BartSte/fzf-help/actions/workflows/test.yml)
+
 ## Contents
 
 <!--toc:start-->
 
 - [Introduction](#introduction)
+- [Supported platforms](#supported-platforms)
 - [Dependencies](#dependencies)
-  - [MacOS](#macos)
 - [Installation](#installation)
   - [Manual as root](#manual-as-root)
   - [Manual as user](#manual-as-user)
@@ -16,6 +18,7 @@
 - [Usage](#usage)
 - [Configuration](#configuration)
 - [Tests](#tests)
+- [Release process](#release-process)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
@@ -25,33 +28,34 @@
 
 `fzf-help` is an `fzf` extension that allows you to select command line options
 of a given command. The options are retrieved from the command its `--help`
-documentation, which is displayed in a preview window. Zsh, bash and fish are
-supported. Tested on Linux, but should work on other platforms that support
-one of the shells.
+documentation, which is displayed in a preview window. Zsh, bash, and fish are
+supported.
 
-![demo](https://media.githubusercontent.com/media/BartSte/fzf-help/refs/heads/21-demo-is-included-during-installation/static/demo.gif)
+![demo](https://media.githubusercontent.com/media/BartSte/fzf-help/refs/heads/main/static/demo.gif)
+
+## Supported platforms
+
+Linux is the only tested platform.
+
+On macOS, GNU `grep` must be available as `ggrep` or `grep`.
+
+The project does not claim support for other platforms.
 
 ## Dependencies
 
-Ensure that you have the following tools installed:
+Install `fzf`. You can also install `bat` for syntax highlighting in the
+preview window.
 
 - [fzf](https://github.com/junegunn/fzf)
-- [bat](https://www.github.com/sharkdp/bat) (optional, but recommended)
+- [bat](https://www.github.com/sharkdp/bat) (optional)
 
-On Arch, for example, you can install these tools with:
-
-```zsh
-sudo pacman -S fzf bat
-```
-
-### MacOS
-
-Ensure that [GNU grep](https://www.gnu.org/software/grep/) is installed and
-available either as `ggrep` or `grep`:
+On Arch, you can install the required dependency with:
 
 ```zsh
-brew install grep # Installs GNU grep as ggrep
+sudo pacman -S fzf
 ```
+
+You can install the optional `bat` dependency with `sudo pacman -S bat`.
 
 ## Installation
 
@@ -119,7 +123,7 @@ bash -c 'tmp_dir=$(mktemp -d); git clone https://github.com/BartSte/fzf-help.git
 
 If you use zsh, add the following to your `.zshrc` file:
 
-```bash
+```zsh
 source $HOME/.local/share/fzf-help/fzf-help.zsh
 zle -N fzf-help-widget
 bindkey "^A" fzf-help-widget
@@ -241,30 +245,32 @@ The following environment variables can be set to configure the behaviour of
 
 ## Tests
 
-To run the test the following submodules need to be installed as git
-sub modules:
+Install `bat` before you run the tests.
 
-- Install [bats-core](https://github.com/bats-core/bats-core)
-- Install [bats-assert](https://github.com/ztombol/bats-assert)
-- Install [bats-support](https://github.com/ztombol/bats-support)
+Install the Git submodules before you run the tests:
 
-To install these sub modules, run the following commands:
-
-```
-git submodule init
-git submodule update
+```sh
+git submodule update --init --recursive
 ```
 
-After this, you can use the `bats` executable in the root of the repository to
-run the tests. To run all tests, run:
+Run all tests:
 
-```bash
+```sh
 ./bats test
 ```
 
-here, `./bats` is a shortcut to `./test/bats/bin/bats`.
+The `./bats` file runs `./test/bats/bin/bats`.
 
 For more information, see the [bats-core documentation](https://bats-core.readthedocs.io/en/stable/)
+
+## Release process
+
+1. Make the release changes on `develop`.
+2. Update `CHANGELOG.md` for the next version.
+3. Merge `develop` into `main`.
+4. Create a `vX.Y.Z` tag on `main`.
+5. Push the tag.
+6. The release workflow publishes an AUR package from this tag.
 
 ## Troubleshooting
 
