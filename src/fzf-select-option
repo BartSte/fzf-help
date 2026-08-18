@@ -64,7 +64,8 @@ get_command() {
 }
 
 get_fzf_help_opts() {
-    if [[ -v FZF_HELP_OPTS ]]; then
+    # Bash 3.2, which macOS provides, does not support [[ -v variable ]].
+    if [[ -n ${FZF_HELP_OPTS+x} ]]; then
         if [[ $FZF_HELP_OPTS == *$'\n'* ]]; then
             while IFS= read -r fzf_help_opt; do
                 [[ -n $fzf_help_opt ]] && fzf_help_opts+=("$fzf_help_opt")
