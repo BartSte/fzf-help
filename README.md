@@ -191,6 +191,8 @@ The following environment variables can be set to configure the behaviour of
   For example, use `--prompt=Select an option` on one line to set a prompt
   that contains spaces.
 
+  A value with no newline uses the legacy space-separated format.
+
 - `FZF_HELP_SYNTAX`: set this variable to configure the `bat --language=`
   option. It defaults to `txt`. If you use `bat` version 0.21 or higher, you can
   set this variable to:

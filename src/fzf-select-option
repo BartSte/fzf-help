@@ -65,9 +65,13 @@ get_command() {
 
 get_fzf_help_opts() {
     if [[ -v FZF_HELP_OPTS ]]; then
-        while IFS= read -r fzf_help_opt; do
-            [[ -n $fzf_help_opt ]] && fzf_help_opts+=("$fzf_help_opt")
-        done <<<"$FZF_HELP_OPTS"
+        if [[ $FZF_HELP_OPTS == *$'\n'* ]]; then
+            while IFS= read -r fzf_help_opt; do
+                [[ -n $fzf_help_opt ]] && fzf_help_opts+=("$fzf_help_opt")
+            done <<<"$FZF_HELP_OPTS"
+        else
+            read -r -a fzf_help_opts <<<"$FZF_HELP_OPTS"
+        fi
     else
         fzf_help_opts=(
             --multi

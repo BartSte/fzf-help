@@ -37,6 +37,15 @@ teardown() {
     assert_output "$(cat_static fzf-select-option-mv-fzf_help_opts.txt)"
 }
 
+@test "Supports legacy space-separated fzf arguments" {
+    export FZF_HELP_OPTS="--foo --bar"
+
+    run fzf-select-option -d mv
+
+    assert_success
+    assert_output "$(cat_static fzf-select-option-mv-fzf_help_opts.txt)"
+}
+
 @test "Sources the Bash integration from a path with spaces" {
     local source_dir source_file
     source_dir="$BATS_TEST_TMPDIR/source directory"
