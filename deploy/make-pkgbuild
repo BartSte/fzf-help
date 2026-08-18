@@ -66,8 +66,8 @@ generate() {
     arch=('any')
     url=\"https://github.com/BartSte/fzf-help\"
     license=('MIT')
-    depends=('fzf' 'bat')
-    source=(\"\$pkgname::git+https://github.com/BartSte/fzf-help.git\")
+    depends=('fzf')
+    source=(\"\$pkgname::git+https://github.com/BartSte/fzf-help.git#tag=v\$pkgver\")
     md5sums=('SKIP')
     changelog=\"CHANGELOG.md\"
 
