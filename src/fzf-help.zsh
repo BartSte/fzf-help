@@ -1,4 +1,4 @@
-_fzf_help_directory=$(dirname $(realpath ${BASH_SOURCE:-$0}))
+_fzf_help_directory=$(dirname "$(realpath "${BASH_SOURCE:-$0}")")
 
 ##############################################################################
 # fzf-help-widget

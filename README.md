@@ -180,13 +180,16 @@ Note that only the following option formats are supported at the moment:
 The following environment variables can be set to configure the behaviour of
 `fzf-help`:
 
-- `FZF_HELP_OPTS`: options to pass to `fzf` when selecting the command to get
-  help for. Defaults to:
+- `FZF_HELP_OPTS`: arguments to pass to `fzf` when you select options. Put one
+  argument on each line. This format keeps spaces in an argument. The default
+  value is:
 
   ```bash
-  FZF_HELP_OPTS="--multi --layout=reverse --preview-window=right,75%,wrap --height 80% "
-  FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
+  export FZF_HELP_OPTS=$'--multi\n--layout=reverse\n--preview-window=right,75%,wrap\n--height\n80%\n--bind\nctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)'
   ```
+
+  For example, use `--prompt=Select an option` on one line to set a prompt
+  that contains spaces.
 
 - `FZF_HELP_SYNTAX`: set this variable to configure the `bat --language=`
   option. It defaults to `txt`. If you use `bat` version 0.21 or higher, you can

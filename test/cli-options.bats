@@ -22,6 +22,12 @@ load helpers.bash
     assert_output "$(cat_static mv-options.txt)"
 }
 
+@test "Finds a one-character long option" {
+    run cli-options <<<'Use --x to enable the feature.'
+    assert_success
+    assert_output '1:--x'
+}
+
 @test "Set CLI_OPTIONS_CMD" {
     export CLI_OPTIONS_CMD="echo 'foo'"
     run cli-options <"$(static mv-help.txt)"

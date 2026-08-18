@@ -14,6 +14,12 @@ If a change is breaking, this is mentioned and a major version is released.
 
 # 2.3.3
 
+## Bug
+
+- The selector accepts one-character long options and rejects extra commands.
+- The shell integrations work when their path contains spaces.
+- `FZF_HELP_OPTS` preserves spaces in each fzf argument.
+
 ## Task
 
 - The AUR package now downloads the release tag.
