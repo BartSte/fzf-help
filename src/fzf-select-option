@@ -131,4 +131,16 @@ else
 fi
 preview_cmd=$(get_preview_cmd)
 
-remove_line_number <<<"$opts" | "$fzf_cmd" --preview "$preview_cmd" "${fzf_help_opts[@]}"
+no_options=false
+if [[ -z $opts ]]; then
+    opts="No options available."
+    no_options=true
+fi
+
+selection=$(remove_line_number <<<"$opts" | "$fzf_cmd" --preview "$preview_cmd" "${fzf_help_opts[@]}")
+
+if $no_options; then
+    exit 1
+fi
+
+printf '%s\n' "$selection"

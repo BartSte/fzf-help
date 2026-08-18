@@ -94,10 +94,35 @@ teardown() {
 }
 
 @test "Run with a help message that has no options" {
+    local fzf_dir preview_file selection_file
+    fzf_dir="$BATS_TEST_TMPDIR/fzf-bin"
+    preview_file="$BATS_TEST_TMPDIR/preview-command"
+    selection_file="$BATS_TEST_TMPDIR/selection"
+    mkdir "$fzf_dir"
+    printf '%s\n' \
+        '#!/usr/bin/env bash' \
+        'set -euo pipefail' \
+        'read -r selection' \
+        'printf "%s\\n" "$selection" > "$FZF_HELP_TEST_SELECTION_FILE"' \
+        'while [[ $# -gt 0 ]]; do' \
+        '    if [[ $1 == --preview ]]; then' \
+        '        printf "%s\\n" "$2" > "$FZF_HELP_TEST_PREVIEW_FILE"' \
+        '        break' \
+        '    fi' \
+        '    shift' \
+        'done' \
+        'printf "%s\\n" "$selection"' > "$fzf_dir/fzf"
+    chmod +x "$fzf_dir/fzf"
     export HELP_MESSAGE_CMD="printf 'No options\n'"
 
-    run fzf-select-option -d example
+    run env \
+        PATH="$fzf_dir:$PATH" \
+        FZF_HELP_TEST_PREVIEW_FILE="$preview_file" \
+        FZF_HELP_TEST_SELECTION_FILE="$selection_file" \
+        fzf-select-option example
 
-    assert_success
-    assert_output --partial 'echo "No help page or options found for example"'
+    assert_failure
+    assert_output ""
+    assert_equal "$(<"$selection_file")" "No options available."
+    assert_equal "$(<"$preview_file")" 'echo "No help page or options found for example"'
 }
