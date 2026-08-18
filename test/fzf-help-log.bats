@@ -6,6 +6,7 @@ load test_helper/bats-support/load
 setup() {
     bats_require_minimum_version 1.5.0
     source "$BATS_TEST_DIRNAME/../src/fzf-help-log"
+    unset FZF_HELP_LOG
     unset FZF_HELP_LOG_PATH
     unset FZF_HELP_LOG_LINES
 }
@@ -54,4 +55,33 @@ setup() {
 
     assert_success
     assert_output $'second\nthird'
+}
+
+@test "The legacy log path variable is supported" {
+    local log_file
+    log_file="$BATS_TEST_TMPDIR/legacy.log"
+    export FZF_HELP_LOG="$log_file"
+
+    fzf_help_log "message"
+
+    run cat "$log_file"
+
+    assert_success
+    assert_output "message"
+}
+
+@test "The preferred log path variable takes precedence" {
+    local legacy_log_file log_file
+    legacy_log_file="$BATS_TEST_TMPDIR/legacy.log"
+    log_file="$BATS_TEST_TMPDIR/current.log"
+    export FZF_HELP_LOG="$legacy_log_file"
+    export FZF_HELP_LOG_PATH="$log_file"
+
+    fzf_help_log "message"
+
+    run cat "$log_file"
+
+    assert_success
+    assert_output "message"
+    [ ! -e "$legacy_log_file" ]
 }

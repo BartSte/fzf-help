@@ -3,14 +3,15 @@
 ################################################################################
 # Logger 
 #
-# Logs messages to the file at `FZF_HELP_LOG_PATH`. If the variable is not set,
-# the log file will be created at `~/.local/state/fzf-help.log`. The log file
-# will be truncated to the last `FZF_HELP_LOG_LINES` lines (default 10000).
+# Logs messages to the file at `FZF_HELP_LOG_PATH`. If this variable is not
+# set, `FZF_HELP_LOG` is used. The log file is created at
+# `~/.local/state/fzf-help.log` when neither variable is set. The log file is
+# truncated to the last `FZF_HELP_LOG_LINES` lines (default 10000).
 fzf_help_log() {
     local message fzf_help_log_path fzf_help_log_lines
 
     message=$1
-    fzf_help_log_path=${FZF_HELP_LOG_PATH:-~/.local/state/fzf-help.log}
+    fzf_help_log_path=${FZF_HELP_LOG_PATH:-${FZF_HELP_LOG:-~/.local/state/fzf-help.log}}
     fzf_help_log_lines=${FZF_HELP_LOG_LINES:-10000}
 
     _fifo_log "$fzf_help_log_path" "$fzf_help_log_lines" "$message"

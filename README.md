@@ -243,8 +243,11 @@ The following environment variables can be set to configure the behaviour of
   export CLI_OPTIONS_CMD='ag -o --numbers -- $RE'
   ```
 
-- `FZF_HELP_LOG_PATH`: the path to the log file. Defaults to
-  `~/.local/state/fzf-help.log`.
+- `FZF_HELP_LOG_PATH`: the preferred path to the log file. It takes precedence
+  over `FZF_HELP_LOG`. The default is `~/.local/state/fzf-help.log`.
+
+- `FZF_HELP_LOG`: the deprecated path to the log file. This variable remains
+  supported for compatibility.
 
 - `FZF_HELP_LOG_LINES`: the number of lines to keep in the log file. Defaults to
   `10000`.
