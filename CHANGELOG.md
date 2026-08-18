@@ -24,6 +24,10 @@ If a change is breaking, this is mentioned and a major version is released.
 - The help command does not run shell syntax from the command buffer.
 - The logger no longer writes device paths to the program output.
 
+## Deprecated
+
+- `FZF_HELP_LOG` is deprecated. Use `FZF_HELP_LOG_PATH`.
+
 ## Task
 
 - The AUR package now downloads the release tag.
