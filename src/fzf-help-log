@@ -30,16 +30,17 @@ _fifo_log() {
     max_lines=$2
     message=$3
 
+    if [[ $path == "/dev/null" || $path == "/dev/stdout" || $path == "/dev/stderr" ]]; then
+        printf '%s\n' "$message" >> "$path"
+        return
+    fi
+
     if [ ! -f "$path" ]; then
         mkdir -p "$(dirname "$path")"
         touch "$path"
     fi
 
-    echo "$message" >> "$path"
-
-    if grep -E "^/dev/(null|stdout|stderr)$" <<< "$path" ; then
-        return
-    fi
+    printf '%s\n' "$message" >> "$path"
 
     if [ $(wc -l < "$path") -gt "$max_lines" ]; then
         tail -n "$max_lines" "$path" > "$path".tmp

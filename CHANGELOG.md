@@ -22,6 +22,7 @@ If a change is breaking, this is mentioned and a major version is released.
 - The selector displays its empty preview if it finds no options.
 - The shell widgets preserve the command buffer when selection fails.
 - The help command does not run shell syntax from the command buffer.
+- The logger no longer writes device paths to the program output.
 
 ## Task
 
