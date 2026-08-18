@@ -17,7 +17,6 @@ If a change is breaking, this is mentioned and a major version is released.
 ## Task
 
 - The AUR package now downloads the release tag.
-- `bat` is not an AUR package dependency.
 - The release process and repository templates are updated.
 
 # 2.3.2
