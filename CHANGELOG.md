@@ -19,6 +19,8 @@ If a change is breaking, this is mentioned and a major version is released.
 - The selector accepts one-character long options and rejects extra commands.
 - The shell integrations work when their path contains spaces.
 - `FZF_HELP_OPTS` preserves spaces in each fzf argument.
+- The selector displays its empty preview if it finds no options.
+- The shell widgets preserve the command buffer when selection fails.
 
 ## Task
 

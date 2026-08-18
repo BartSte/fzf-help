@@ -92,3 +92,12 @@ teardown() {
     assert_success
     assert_output --partial '<--prompt=Select an option>'
 }
+
+@test "Run with a help message that has no options" {
+    export HELP_MESSAGE_CMD="printf 'No options\n'"
+
+    run fzf-select-option -d example
+
+    assert_success
+    assert_output --partial 'echo "No help page or options found for example"'
+}

@@ -122,7 +122,13 @@ parse_args "$@"
 get_fzf_help_opts
 
 dir=$(dirname "$(realpath "${BASH_SOURCE:-$0}")")
-opts="$("$dir/help-message" "$cmd" | "$dir/cli-options")"
+if opts="$("$dir/help-message" "$cmd" | "$dir/cli-options")"; then
+    :
+else
+    opts_status=$?
+    [[ $opts_status -ne 1 ]] && exit "$opts_status"
+    opts=""
+fi
 preview_cmd=$(get_preview_cmd)
 
 remove_line_number <<<"$opts" | "$fzf_cmd" --preview "$preview_cmd" "${fzf_help_opts[@]}"

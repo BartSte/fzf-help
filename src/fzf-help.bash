@@ -10,10 +10,17 @@ _fzf_help_directory=$(dirname "$(realpath "${BASH_SOURCE:-$0}")")
 fzf-help-widget() {
     [[ -z $READLINE_LINE ]] && { return; }
 
-    local opts=$(echo $READLINE_LINE | $_fzf_help_directory/fzf-select-option | tr "\n" " ")
+    local opts ret
+    if opts=$(printf '%s\n' "$READLINE_LINE" | "$_fzf_help_directory/fzf-select-option"); then
+        :
+    else
+        ret=$?
+        return "$ret"
+    fi
+
+    opts=$(tr '\n' ' ' <<<"$opts")
     READLINE_LINE="$READLINE_LINE$opts"
     READLINE_POINT=${#READLINE_LINE}
 
-    local ret=$?
-    return $ret
+    return 0
 }
