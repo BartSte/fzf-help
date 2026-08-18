@@ -207,8 +207,8 @@ The following environment variables can be set to configure the behaviour of
 - `HELP_MESSAGE_CMD`: controls the command that gets help text. By default,
   `fzf-help` runs the selected command with `--help`. If you set this value,
   `fzf-help` evaluates it as trusted Bash code. The `$cmd` variable contains
-  the validated command name. For example, set it to `man -P cat "$cmd"` to
-  use man pages.
+  validated command text. It can include an executable path or subcommands.
+  For example, set it to `man -P cat "$cmd"` to use man pages.
 
 - `HELP_MESSAGE_RC`: set this environment variable to a file you want to be
   sourced before getting the help message. Typically, this file will contain

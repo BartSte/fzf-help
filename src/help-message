@@ -15,7 +15,8 @@ The default command is:
     <cmd> --help
 
 When you set HELP_MESSAGE_CMD, fzf-help evaluates it as trusted Bash code. It
-sets the \$cmd variable to the validated command name.
+sets the \$cmd variable to validated command text. The text can include an
+executable path or subcommands.
 
 where:
     options:
@@ -32,26 +33,29 @@ parse_args() {
                 exit 0
                 ;;
             *)
-                if [[ -z $cmd ]]; then
-                    cmd="$1"
-                else
-                    echo "Unknown argument: $1"
-                    echo "$usage"
-                    exit 1
-                fi
+                cmd_parts+=("$1")
                 ;;
         esac
         shift
     done
 }
 
+cmd_parts=()
+cmd_args=()
 cmd=""
 parse_args "$@"
 
-if [[ -n $cmd && ! $cmd =~ ^[a-zA-Z0-9_.+-]+$ ]]; then
-    echo "The command name contains unsupported characters." >&2
-    exit 1
-fi
+for cmd_part in "${cmd_parts[@]}"; do
+    if [[ ! $cmd_part =~ ^[a-zA-Z0-9_./:+@%=-]+([[:space:]][a-zA-Z0-9_./:+@%=-]+)*$ ]]; then
+        echo "The command contains unsupported characters." >&2
+        exit 1
+    fi
+
+    read -r -a parsed_args <<<"$cmd_part"
+    cmd_args+=("${parsed_args[@]}")
+done
+
+cmd="${cmd_args[*]}"
 
 help_message=$("$_fzf_help_directory"/make-temp "fzf-help-message")
 help_message_cmd="${HELP_MESSAGE_CMD:-}"
@@ -70,7 +74,7 @@ if [[ -n $cmd ]]; then
     if [[ -n $help_message_cmd ]]; then
         eval "$help_message_cmd" >"$help_message" || true
     else
-        "$cmd" --help >"$help_message" || true
+        "${cmd_args[@]}" --help >"$help_message" || true
     fi
 fi
 

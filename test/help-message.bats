@@ -65,6 +65,30 @@ setup() {
     assert_output "argument=--help"
 }
 
+@test "Runs executable paths and subcommands" {
+    local command command_dir
+    command_dir="$BATS_TEST_TMPDIR/commands"
+    command="$command_dir/example-command"
+    mkdir "$command_dir"
+    printf '%s\n' '#!/usr/bin/env bash' 'printf "arguments=%s\\n" "$*"' > "$command"
+    chmod +x "$command"
+
+    run help-message "$command"
+
+    assert_success
+    assert_output "arguments=--help"
+
+    run env PATH="$command_dir:$PATH" help-message example-command status
+
+    assert_success
+    assert_output "arguments=status --help"
+
+    run env PATH="$command_dir:$PATH" help-message "example-command status"
+
+    assert_success
+    assert_output "arguments=status --help"
+}
+
 @test "Does not run shell syntax from the command argument" {
     local marker
     marker="$BATS_TEST_TMPDIR/command-ran"
@@ -72,6 +96,6 @@ setup() {
     run help-message "example; touch $marker"
 
     assert_failure
-    assert_output "The command name contains unsupported characters."
+    assert_output "The command contains unsupported characters."
     [ ! -e "$marker" ]
 }
