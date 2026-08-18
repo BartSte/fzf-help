@@ -133,3 +133,24 @@ teardown() {
     assert_equal "$(<"$selection_file")" "No options available."
     assert_equal "$(<"$preview_file")" 'echo "No help page or options found for example"'
 }
+
+@test "Uses a unique cache file for each selector session" {
+    local fzf_dir first_preview first_cache second_preview second_cache
+    fzf_dir="$BATS_TEST_TMPDIR/fzf-bin"
+    mkdir "$fzf_dir"
+    printf '%s\n' '#!/usr/bin/env bash' 'while [[ $# -gt 0 ]]; do' '    if [[ $1 == --preview ]]; then' '        cache=$(printf "%s\\n" "$2" | sed -n "s/^cat '\''\\(.*\\)'\'' |.*$/\\1/p")' '        printf "cache=%s\\n" "$cache"' '        cat "$cache"' '        exit 0' '    fi' '    shift' 'done' > "$fzf_dir/fzf"
+    chmod +x "$fzf_dir/fzf"
+
+    run env PATH="$fzf_dir:$PATH" fzf-select-option mv
+    assert_success
+    first_preview="${output%%$'\n'*}"
+    first_cache=${first_preview#cache=}
+    [ ! -e "$first_cache" ]
+
+    run env PATH="$fzf_dir:$PATH" fzf-select-option mv
+    assert_success
+    second_preview="${output%%$'\n'*}"
+    second_cache=${second_preview#cache=}
+    [ ! -e "$second_cache" ]
+    [ "$first_cache" != "$second_cache" ]
+}

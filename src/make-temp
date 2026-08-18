@@ -23,7 +23,5 @@ if [[ $1 == "-h" || $1 == "--help" ]]; then
 fi
 
 name=$1
-tmpdir=$(dirname "$(mktemp -u)")
-file="$tmpdir/$name"
-touch "$file"
-echo "$file"
+tmpdir=${TMPDIR:-/tmp}
+mktemp "$tmpdir/$name.XXXXXXXXXX"

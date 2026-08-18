@@ -99,7 +99,12 @@ parse_args "$@"
 
 set_command_args
 
-help_message=$("$_fzf_help_directory"/make-temp "fzf-help-message")
+if [[ -n ${FZF_HELP_MESSAGE_PATH:-} ]]; then
+    help_message="$FZF_HELP_MESSAGE_PATH"
+else
+    help_message=$("$_fzf_help_directory"/make-temp "fzf-help-message")
+    trap 'rm -f "$help_message"' EXIT
+fi
 help_message_cmd="${HELP_MESSAGE_CMD:-}"
 help_message_rc="${HELP_MESSAGE_RC:-""}"
 fzf_help_log "Custom help command is: $help_message_cmd"

@@ -252,6 +252,15 @@ The following environment variables can be set to configure the behaviour of
 - `FZF_HELP_LOG_LINES`: the number of lines to keep in the log file. Defaults to
   `10000`.
 
+### Help-message cache
+
+Each `fzf-select-option` session creates one temporary help-message file. The
+preview process reads this file. The selector removes the file when fzf exits.
+
+A standalone `help-message <cmd>` call uses a temporary file only while the
+command runs. It does not preserve a cache. A standalone `help-message` call
+with no command prints no previous help message.
+
 ## Tests
 
 Install `bat` before you run the tests.

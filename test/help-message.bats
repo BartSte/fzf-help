@@ -4,24 +4,6 @@ load test_helper/bats-assert/load
 load test_helper/bats-support/load
 load helpers.bash
 
-get_temp() {
-    local tmpdir
-    tmpdir=$(dirname "$(mktemp tmp.XXXXXXXXXX -ut)")
-    echo "$tmpdir/fzf-help-message"
-}
-
-rm_temp() {
-    local file
-    file=$(get_temp)
-    if [[ -f $file ]]; then
-        rm "$file"
-    fi
-}
-
-setup() {
-    rm_temp
-}
-
 @test "Run without command" {
     help-message
 }
@@ -40,10 +22,10 @@ setup() {
     assert_output "$(ls --help)"
 }
 
-@test "Cached help message" {
+@test "Standalone calls do not retain a help-message cache" {
     help-message ls
     run help-message
-    assert_output "$(ls --help)"
+    assert_output ""
 }
 
 @test "Set HELP_MESSAGE_CMD" {

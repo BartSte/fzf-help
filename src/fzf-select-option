@@ -108,13 +108,19 @@ set_fzf_help_opts() {
 get_options() {
     local options status
 
-    if options=$("$dir/help-message" "$cmd" | "$dir/cli-options"); then
+    if options=$(FZF_HELP_MESSAGE_PATH="$help_message" "$dir/help-message" "$cmd" | "$dir/cli-options"); then
         printf '%s\n' "$options"
     else
         status=$?
         [[ $status -eq 1 ]] && return 0
         return "$status"
     fi
+}
+
+shell_quote() {
+    printf "'"
+    printf '%s' "$1" | sed "s/'/'\\\\''/g"
+    printf "'"
 }
 
 get_preview_cmd() {
@@ -124,7 +130,10 @@ get_preview_cmd() {
         printf 'echo "No help page or options found for %s"\n' "$cmd"
     else
         # Uses the cached help message, see help-message.
-        printf '%s\n' "$dir/help-message | $dir/fzf-select-option-preview \"$options\" {n}"
+        printf 'cat %s | %s %s {n}\n' \
+            "$(shell_quote "$help_message")" \
+            "$(shell_quote "$dir/fzf-select-option-preview")" \
+            "$(shell_quote "$options")"
     fi
 }
 
@@ -166,6 +175,7 @@ fzf_debug() {
     msg="stdin:\n$(cat -)\n"
     shift
     preview_cmd_no_path=${1//$dir\//}
+    preview_cmd_no_path=${preview_cmd_no_path//$help_message/<cache>}
     msg+="\npreview cmd:\n$preview_cmd_no_path\n"
     shift
     msg+="\nfzf_help_opts:\n${*}"
@@ -184,6 +194,8 @@ parse_args "$@"
 set_fzf_help_opts
 
 dir=$(dirname "$(realpath "${BASH_SOURCE:-$0}")")
+help_message=$("$dir/make-temp" "fzf-help-message")
+trap 'rm -f "$help_message"' EXIT
 options=$(get_options)
 preview_cmd=$(get_preview_cmd "$options")
 show_options "$options" "$preview_cmd"
