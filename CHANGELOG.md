@@ -21,6 +21,7 @@ If a change is breaking, this is mentioned and a major version is released.
 - `FZF_HELP_OPTS` preserves spaces in each fzf argument.
 - The selector displays its empty preview if it finds no options.
 - The shell widgets preserve the command buffer when selection fails.
+- The help command does not run shell syntax from the command buffer.
 
 ## Task
 

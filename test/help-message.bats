@@ -47,7 +47,31 @@ setup() {
 }
 
 @test "Set HELP_MESSAGE_CMD" {
-    export HELP_MESSAGE_CMD="echo \$cmd"
+    export HELP_MESSAGE_CMD='printf "custom:%s\\n" "$cmd"'
     run help-message ls
-    assert_output "ls"
+    assert_output "custom:ls"
+}
+
+@test "Runs the default command with --help" {
+    local command_dir
+    command_dir="$BATS_TEST_TMPDIR/commands"
+    mkdir "$command_dir"
+    printf '%s\n' '#!/usr/bin/env bash' 'printf "argument=%s\\n" "$1"' > "$command_dir/example-command"
+    chmod +x "$command_dir/example-command"
+
+    run env PATH="$command_dir:$PATH" help-message example-command
+
+    assert_success
+    assert_output "argument=--help"
+}
+
+@test "Does not run shell syntax from the command argument" {
+    local marker
+    marker="$BATS_TEST_TMPDIR/command-ran"
+
+    run help-message "example; touch $marker"
+
+    assert_failure
+    assert_output "The command name contains unsupported characters."
+    [ ! -e "$marker" ]
 }

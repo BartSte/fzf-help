@@ -204,15 +204,16 @@ The following environment variables can be set to configure the behaviour of
   to get syntax highlighting for the `--help` documentation. Older versions of
   `bat` do not support this syntax highlighting, therefore the default is `txt`.
 
-- `HELP_MESSAGE_CMD`: controls which command is used to retrieve the command
-  line options. Here, the `$cmd` variable is the command to get the options for.
-  Defaults to `$cmd --help`. You can use `man -P cat $cmd` if you want to use the
-  man page instead of the `--help` documentation.
+- `HELP_MESSAGE_CMD`: controls the command that gets help text. By default,
+  `fzf-help` runs the selected command with `--help`. If you set this value,
+  `fzf-help` evaluates it as trusted Bash code. The `$cmd` variable contains
+  the validated command name. For example, set it to `man -P cat "$cmd"` to
+  use man pages.
 
 - `HELP_MESSAGE_RC`: set this environment variable to a file you want to be
   sourced before getting the help message. Typically, this file will contain
-  aliases and functions from which you may want to get the help message. When
-  this variable is set, alias expansion is also enabled.
+  functions for which you want to get help. The file is trusted Bash code. When
+  this variable is set, alias expansion is enabled for `HELP_MESSAGE_CMD`.
 
 - `CLI_OPTIONS_CMD`: set this environment variable to the command you want to
   use to retrieve the command line options. When defining the command, ensure
@@ -235,8 +236,8 @@ The following environment variables can be set to configure the behaviour of
 
   where `$RE` is the regular expression that is used to match the command line
   options. You can also add this to your custom command by adding `$RE` in your
-  command. For example, if you want to use `ag` instead of `grep`, you can set
-  `CLI_OPTIONS_CMD` to:
+  command. This value is trusted shell code. For example, if you want to use
+  `ag` instead of `grep`, you can set `CLI_OPTIONS_CMD` to:
 
   ```bash
   export CLI_OPTIONS_CMD='ag -o --numbers -- $RE'
