@@ -40,22 +40,64 @@ parse_args() {
     done
 }
 
+is_safe_command_part() {
+    [[ $1 =~ ^[a-zA-Z0-9_./:+@%=-]+([[:space:]][a-zA-Z0-9_./:+@%=-]+)*$ ]]
+}
+
+add_command_part() {
+    local command_part=$1
+    local parsed_args
+
+    if ! is_safe_command_part "$command_part"; then
+        echo "The command contains unsupported characters." >&2
+        return 1
+    fi
+
+    read -r -a parsed_args <<<"$command_part"
+    cmd_args+=("${parsed_args[@]}")
+}
+
+set_command_args() {
+    local command_part
+
+    for command_part in "${cmd_parts[@]}"; do
+        add_command_part "$command_part"
+    done
+
+    cmd="${cmd_args[*]}"
+}
+
+source_help_message_rc() {
+    if [[ -f $help_message_rc ]]; then
+        shopt -s expand_aliases
+        . "$help_message_rc"
+    fi
+}
+
+write_custom_help_message() {
+    eval "$help_message_cmd" >"$help_message" || true
+}
+
+write_default_help_message() {
+    "${cmd_args[@]}" --help >"$help_message" || true
+}
+
+write_help_message() {
+    [[ -z $cmd ]] && return
+
+    if [[ -n $help_message_cmd ]]; then
+        write_custom_help_message
+    else
+        write_default_help_message
+    fi
+}
+
 cmd_parts=()
 cmd_args=()
 cmd=""
 parse_args "$@"
 
-for cmd_part in "${cmd_parts[@]}"; do
-    if [[ ! $cmd_part =~ ^[a-zA-Z0-9_./:+@%=-]+([[:space:]][a-zA-Z0-9_./:+@%=-]+)*$ ]]; then
-        echo "The command contains unsupported characters." >&2
-        exit 1
-    fi
-
-    read -r -a parsed_args <<<"$cmd_part"
-    cmd_args+=("${parsed_args[@]}")
-done
-
-cmd="${cmd_args[*]}"
+set_command_args
 
 help_message=$("$_fzf_help_directory"/make-temp "fzf-help-message")
 help_message_cmd="${HELP_MESSAGE_CMD:-}"
@@ -64,18 +106,7 @@ fzf_help_log "Custom help command is: $help_message_cmd"
 fzf_help_log "Help message file is: $help_message"
 fzf_help_log "Aliases: $help_message_rc"
 
-if [ -f "$help_message_rc" ]; then
-    shopt -s expand_aliases
-    . "$help_message_rc"
-fi
-    
-
-if [[ -n $cmd ]]; then
-    if [[ -n $help_message_cmd ]]; then
-        eval "$help_message_cmd" >"$help_message" || true
-    else
-        "${cmd_args[@]}" --help >"$help_message" || true
-    fi
-fi
+source_help_message_rc
+write_help_message
 
 cat "$help_message" > /dev/stdout
