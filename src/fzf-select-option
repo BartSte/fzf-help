@@ -130,8 +130,10 @@ remove_line_numbers() {
 select_options() {
     local options=$1
     local preview_cmd=$2
+    local selectable_options
 
-    remove_line_numbers <<<"$options" | "$fzf_cmd" --preview "$preview_cmd" "${fzf_help_opts[@]}"
+    selectable_options=$(remove_line_numbers <<<"$options")
+    "$fzf_cmd" --preview "$preview_cmd" "${fzf_help_opts[@]}" <<<"$selectable_options"
 }
 
 show_options() {
