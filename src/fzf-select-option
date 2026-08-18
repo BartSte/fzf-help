@@ -57,6 +57,7 @@ parse_args() {
     fi
 
     cmd=$(remove_command_options "$cmd")
+    cmd=$(trim_command_whitespace "$cmd")
 }
 
 read_command_from_stdin() {
@@ -65,6 +66,10 @@ read_command_from_stdin() {
 
 remove_command_options() {
     sed "s/\( -\).*$//" <<<"$1"
+}
+
+trim_command_whitespace() {
+    sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' <<<"$1"
 }
 
 set_default_fzf_help_opts() {

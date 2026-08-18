@@ -29,6 +29,13 @@ teardown() {
     run fzf-select-option -d mv
     assert_output "$(cat_static fzf-select-option-mv.txt)"
 }
+
+@test "Trims trailing whitespace from command input" {
+    run fzf-select-option -d <<< $'mv \t'
+
+    assert_success
+    assert_output "$(cat_static fzf-select-option-mv.txt)"
+}
     
 @test "Run with mv command and FZF_HELP_OPTS" {
     unset FZF_HELP_OPTS
