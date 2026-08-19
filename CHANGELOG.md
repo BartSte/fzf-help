@@ -12,7 +12,7 @@ user. A change is always categorized based on the following types:
 
 If a change is breaking, this is mentioned and a major version is released.
 
-# 2.3.3
+# 2.4.0
 
 ## Bug
 
