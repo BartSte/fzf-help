@@ -17,6 +17,7 @@
   - [With package manager](#with-package-manager)
 - [Usage](#usage)
 - [Configuration](#configuration)
+- [Development notes](#development-notes)
 - [Tests](#tests)
 - [Release process](#release-process)
 - [Troubleshooting](#troubleshooting)
@@ -251,6 +252,8 @@ The following environment variables can be set to configure the behaviour of
 
 - `FZF_HELP_LOG_LINES`: the number of lines to keep in the log file. Defaults to
   `10000`.
+
+## Development notes
 
 ### Help-message cache
 
