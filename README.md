@@ -17,6 +17,7 @@
   - [With package manager](#with-package-manager)
 - [Usage](#usage)
 - [Configuration](#configuration)
+- [Development notes](#development-notes)
 - [Tests](#tests)
 - [Release process](#release-process)
 - [Troubleshooting](#troubleshooting)
@@ -180,13 +181,18 @@ Note that only the following option formats are supported at the moment:
 The following environment variables can be set to configure the behaviour of
 `fzf-help`:
 
-- `FZF_HELP_OPTS`: options to pass to `fzf` when selecting the command to get
-  help for. Defaults to:
+- `FZF_HELP_OPTS`: arguments to pass to `fzf` when you select options. Put one
+  argument on each line. This format keeps spaces in an argument. The default
+  value is:
 
   ```bash
-  FZF_HELP_OPTS="--multi --layout=reverse --preview-window=right,75%,wrap --height 80% "
-  FZF_HELP_OPTS+="--bind ctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)"
+  export FZF_HELP_OPTS=$'--multi\n--layout=reverse\n--preview-window=right,75%,wrap\n--height\n80%\n--bind\nctrl-a:change-preview-window(down,75%,nowrap|right,75%,nowrap)'
   ```
+
+  For example, use `--prompt=Select an option` on one line to set a prompt
+  that contains spaces.
+
+  A value with no newline uses the legacy space-separated format.
 
 - `FZF_HELP_SYNTAX`: set this variable to configure the `bat --language=`
   option. It defaults to `txt`. If you use `bat` version 0.21 or higher, you can
@@ -199,15 +205,16 @@ The following environment variables can be set to configure the behaviour of
   to get syntax highlighting for the `--help` documentation. Older versions of
   `bat` do not support this syntax highlighting, therefore the default is `txt`.
 
-- `HELP_MESSAGE_CMD`: controls which command is used to retrieve the command
-  line options. Here, the `$cmd` variable is the command to get the options for.
-  Defaults to `$cmd --help`. You can use `man -P cat $cmd` if you want to use the
-  man page instead of the `--help` documentation.
+- `HELP_MESSAGE_CMD`: controls the command that gets help text. By default,
+  `fzf-help` runs the selected command with `--help`. If you set this value,
+  `fzf-help` evaluates it as trusted Bash code. The `$cmd` variable contains
+  validated command text. It can include an executable path or subcommands.
+  For example, set it to `man -P cat "$cmd"` to use man pages.
 
 - `HELP_MESSAGE_RC`: set this environment variable to a file you want to be
   sourced before getting the help message. Typically, this file will contain
-  aliases and functions from which you may want to get the help message. When
-  this variable is set, alias expansion is also enabled.
+  functions for which you want to get help. The file is trusted Bash code. When
+  this variable is set, alias expansion is enabled for `HELP_MESSAGE_CMD`.
 
 - `CLI_OPTIONS_CMD`: set this environment variable to the command you want to
   use to retrieve the command line options. When defining the command, ensure
@@ -230,18 +237,32 @@ The following environment variables can be set to configure the behaviour of
 
   where `$RE` is the regular expression that is used to match the command line
   options. You can also add this to your custom command by adding `$RE` in your
-  command. For example, if you want to use `ag` instead of `grep`, you can set
-  `CLI_OPTIONS_CMD` to:
+  command. This value is trusted shell code. For example, if you want to use
+  `ag` instead of `grep`, you can set `CLI_OPTIONS_CMD` to:
 
   ```bash
   export CLI_OPTIONS_CMD='ag -o --numbers -- $RE'
   ```
 
-- `FZF_HELP_LOG`: the path to the log file. Defaults to
-  `~/.local/state/fzf-help.log`.
+- `FZF_HELP_LOG_PATH`: the preferred path to the log file. It takes precedence
+  over `FZF_HELP_LOG`. The default is `~/.local/state/fzf-help.log`.
+
+- `FZF_HELP_LOG`: the deprecated path to the log file. This variable remains
+  supported for compatibility.
 
 - `FZF_HELP_LOG_LINES`: the number of lines to keep in the log file. Defaults to
   `10000`.
+
+## Development notes
+
+### Help-message cache
+
+Each `fzf-select-option` session creates one temporary help-message file. The
+preview process reads this file. The selector removes the file when fzf exits.
+
+A standalone `help-message <cmd>` call uses a temporary file only while the
+command runs. It does not preserve a cache. A standalone `help-message` call
+with no command prints no previous help message.
 
 ## Tests
 

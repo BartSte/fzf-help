@@ -33,7 +33,7 @@ PREFIX='(?:((?<=^)|(?<=[^\-]))(--|‐‐))'
 HEAD='a-zA-Z0-9\['
 MIDDLE='a-zA-Z0-9\[\]\-\=\.\,\%'
 TAIL='a-zA-Z0-9'
-LONG="$PREFIX([$HEAD]+[$MIDDLE]*[$TAIL]+)"
+LONG="$PREFIX([$HEAD](?:[$MIDDLE]*[$TAIL])?)"
 
 # Detects short options: -f or -F
 PREFIX='(?:((?<=^)|(?<=[^\-\_a-zA-Z0-9]))(-|‐))'

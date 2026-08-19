@@ -6,16 +6,17 @@ source "$_fzf_help_directory"/fzf-help-log
 
 usage="Usage: $(basename "$0") [-h | --help] <cmd>
 
-Evaluates the HELP_MESSAGE_CMD environment variable and writes the result to
-stdout and a temp file. If no <cmd> argument is given, then the content of
-the temp file is written to stdout, i.e, the help message of the command that
-was last evaluated.
+Writes the help message for <cmd> to stdout and a temp file. If no <cmd>
+argument is given, it writes the content of the temp file to stdout. The file
+contains the help message from the last command.
 
-The default values of HELP_MESSAGE_CMD is:
+The default command is:
 
-    export HELP_MESSAGE_CMD='\$cmd --help'
+    <cmd> --help
 
-here, you can \$cmd as a placeholder for the <cmd> argument.
+When you set HELP_MESSAGE_CMD, fzf-help evaluates it as trusted Bash code. It
+sets the \$cmd variable to validated command text. The text can include an
+executable path or subcommands.
 
 where:
     options:
@@ -32,35 +33,85 @@ parse_args() {
                 exit 0
                 ;;
             *)
-                if [[ -z $cmd ]]; then
-                    cmd="$1"
-                else
-                    echo "Unknown argument: $1"
-                    echo "$usage"
-                    exit 1
-                fi
+                cmd_parts+=("$1")
                 ;;
         esac
         shift
     done
 }
 
+is_safe_command_part() {
+    [[ $1 =~ ^[a-zA-Z0-9_./:+@%=-]+([[:space:]][a-zA-Z0-9_./:+@%=-]+)*$ ]]
+}
+
+add_command_part() {
+    local command_part=$1
+    local parsed_args
+
+    if ! is_safe_command_part "$command_part"; then
+        echo "The command contains unsupported characters." >&2
+        return 1
+    fi
+
+    read -r -a parsed_args <<<"$command_part"
+    cmd_args+=("${parsed_args[@]}")
+}
+
+set_command_args() {
+    local command_part
+
+    for command_part in "${cmd_parts[@]}"; do
+        add_command_part "$command_part"
+    done
+
+    cmd="${cmd_args[*]}"
+}
+
+source_help_message_rc() {
+    if [[ -f $help_message_rc ]]; then
+        shopt -s expand_aliases
+        . "$help_message_rc"
+    fi
+}
+
+write_custom_help_message() {
+    eval "$help_message_cmd" >"$help_message" || true
+}
+
+write_default_help_message() {
+    "${cmd_args[@]}" --help >"$help_message" || true
+}
+
+write_help_message() {
+    [[ -z $cmd ]] && return
+
+    if [[ -n $help_message_cmd ]]; then
+        write_custom_help_message
+    else
+        write_default_help_message
+    fi
+}
+
+cmd_parts=()
+cmd_args=()
 cmd=""
 parse_args "$@"
 
-help_message=$("$_fzf_help_directory"/make-temp "fzf-help-message")
-help_message_cmd="${HELP_MESSAGE_CMD:-$cmd --help}"
+set_command_args
+
+if [[ -n ${FZF_HELP_MESSAGE_PATH:-} ]]; then
+    help_message="$FZF_HELP_MESSAGE_PATH"
+else
+    help_message=$("$_fzf_help_directory"/make-temp "fzf-help-message")
+    trap 'rm -f "$help_message"' EXIT
+fi
+help_message_cmd="${HELP_MESSAGE_CMD:-}"
 help_message_rc="${HELP_MESSAGE_RC:-""}"
-fzf_help_log "Help command is: $help_message_cmd"
+fzf_help_log "Custom help command is: $help_message_cmd"
 fzf_help_log "Help message file is: $help_message"
 fzf_help_log "Aliases: $help_message_rc"
 
-if [ -f "$help_message_rc" ]; then
-    shopt -s expand_aliases
-    . "$help_message_rc"
-fi
-    
-
-[[ $cmd ]] && { eval "$help_message_cmd" >"$help_message" || true; }
+source_help_message_rc
+write_help_message
 
 cat "$help_message" > /dev/stdout

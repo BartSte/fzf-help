@@ -11,9 +11,15 @@ function fzf-help-widget
   if test -z (commandline)
     return
   end
-  set -l cmd (echo -n (commandline|string collect))
-  set -l opts (echo -n (commandline|string collect)| $_fzf_help_directory/fzf-select-option | tr "\n" " "|string collect)
+  set -l cmd (commandline|string collect)
+  set -l opts (printf '%s\n' "$cmd" | $_fzf_help_directory/fzf-select-option)
+  set -l selector_status $status
+  if test "$selector_status" -ne 0
+    commandline -f repaint
+    return $selector_status
+  end
+  set opts (string join ' ' -- $opts)
   commandline -r -- $cmd$opts
   commandline -f repaint
-  return $status
+  return 0
 end

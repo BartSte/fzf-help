@@ -14,6 +14,21 @@ If a change is breaking, this is mentioned and a major version is released.
 
 # 2.3.3
 
+## Bug
+
+- The selector accepts one-character long options and rejects extra commands.
+- The shell integrations work when their path contains spaces.
+- `FZF_HELP_OPTS` preserves spaces in each fzf argument.
+- The selector displays its empty preview if it finds no options.
+- The shell widgets preserve the command buffer when selection fails.
+- The help command does not run shell syntax from the command buffer.
+- The logger no longer writes device paths to the program output.
+- Each selector session now uses and removes its own help-message cache file.
+
+## Deprecated
+
+- `FZF_HELP_LOG` is deprecated. Use `FZF_HELP_LOG_PATH`.
+
 ## Task
 
 - The AUR package now downloads the release tag.

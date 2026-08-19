@@ -21,7 +21,7 @@ jobs:
       - name: Install test dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install --yes bat
+          sudo apt-get install --yes bat fish zsh
           git submodule update --init --recursive
 
       - name: Run Bats Test
