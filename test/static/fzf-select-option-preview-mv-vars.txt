@@ -2,7 +2,7 @@
 opts:
 1:-T
 3:-t
-7:--backup[=CONTROL
+7:--backup
 8:-b
 8:--backup
 9:--debug
@@ -19,14 +19,14 @@ opts:
 14:--no-copy
 15:--strip-trailing-slashes
 17:-S
-17:--suffix=SUFFIX
+17:--suffix
 18:-t
-18:--target-directory=DIRECTORY
+18:--target-directory
 19:-T
 19:--no-target-directory
-20:--update[=UPDATE
+20:--update
 22:-u
-22:--update[=older
+22:--update
 23:-v
 23:--verbose
 24:-Z

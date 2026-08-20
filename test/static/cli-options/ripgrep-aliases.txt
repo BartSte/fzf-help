@@ -1,0 +1,3 @@
+Ripgrep alias formats:
+  -h/--help              show help
+  -./--hidden            search hidden files and directories

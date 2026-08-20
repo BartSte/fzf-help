@@ -1,0 +1,6 @@
+Python punctuation names:
+  -?                     show help
+  -#                     enable debug output
+Zsh numeric names:
+  -0                     use a null separator
+  -1                     select mode one

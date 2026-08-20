@@ -1,0 +1,5 @@
+GNU argument formats:
+  --color=WHEN            control color output
+  --backup[=CONTROL]      make a backup of each destination file
+  --file FILE             read configuration from FILE
+  --dry-run               show the result without changes

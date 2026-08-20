@@ -1,0 +1,4 @@
+Bash grouped form:
+  -abc                   enable options a, b, and c
+ls grouped form:
+  -al                    show all entries in long format

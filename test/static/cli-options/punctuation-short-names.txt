@@ -1,0 +1,6 @@
+Less punctuation name:
+  -~                     do not show tildes after the file ends
+Zip punctuation name:
+  -@                     read file names from standard input
+Rsync punctuation name:
+  -@, --modify-window=NUM set the timestamp accuracy

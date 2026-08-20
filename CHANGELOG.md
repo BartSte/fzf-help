@@ -24,6 +24,8 @@ If a change is breaking, this is mentioned and a major version is released.
 - The help command does not run shell syntax from the command buffer.
 - The logger no longer writes device paths to the program output.
 - Each selector session now uses and removes its own help-message cache file.
+- The option extractor now returns complete names for its documented Unix
+  grammar.
 
 ## Deprecated
 

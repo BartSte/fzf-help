@@ -1,0 +1,4 @@
+2:--color
+3:--backup
+4:--file
+5:--dry-run
