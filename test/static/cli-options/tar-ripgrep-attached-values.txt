@@ -1,0 +1,5 @@
+Tar attached value:
+  -fARCHIVE               use ARCHIVE
+Ripgrep attached values:
+  -j8                     use eight threads
+  -A2                     show two lines after each match

@@ -16,8 +16,11 @@
   - [Manual as user](#manual-as-user)
   - [With package manager](#with-package-manager)
 - [Usage](#usage)
+  - [Default option support](#default-option-support)
 - [Configuration](#configuration)
 - [Development notes](#development-notes)
+  - [Default option extractor](#default-option-extractor)
+  - [Help-message cache](#help-message-cache)
 - [Tests](#tests)
 - [Release process](#release-process)
 - [Troubleshooting](#troubleshooting)
@@ -171,10 +174,22 @@ and the `--help` documentation in the preview window. You can press `ctrl-a`
 again to toggle the preview window to the bottom or the right of the widget.
 This is useful when you do not like page wrapping.
 
-Note that only the following option formats are supported at the moment:
+### Default option support
 
-- short options: `-o` or `-O`
-- long options: `--option`
+The default extractor supports common Unix option names:
+
+- A short name uses one hyphen and one supported ASCII character. Examples
+  include `-h`, `-0`, `-?`, and `-.`.
+- A long name uses two hyphens. It can contain ASCII letters, digits, hyphens,
+  and underscores. Examples include `--help` and `--dry-run`.
+- The U+2010 hyphen also works. A name cannot mix ASCII and U+2010 hyphens.
+
+The extractor returns only the option name. For example, `--color=WHEN`
+returns `--color`, and `--backup[=CONTROL]` returns `--backup`.
+
+The extractor ignores ambiguous forms such as `-abc`, `-j8`, and
+`-I/usr/include`. Set `CLI_OPTIONS_CMD` if a command uses a different option
+grammar.
 
 ## Configuration
 
@@ -244,6 +259,9 @@ The following environment variables can be set to configure the behaviour of
   export CLI_OPTIONS_CMD='ag -o --numbers -- $RE'
   ```
 
+  See [Default option extractor](#default-option-extractor) for the complete
+  grammar and boundary rules.
+
 - `FZF_HELP_LOG_PATH`: the preferred path to the log file. It takes precedence
   over `FZF_HELP_LOG`. The default is `~/.local/state/fzf-help.log`.
 
@@ -254,6 +272,136 @@ The following environment variables can be set to configure the behaviour of
   `10000`.
 
 ## Development notes
+
+### Default option extractor
+
+`src/cli-options` scans the complete help message with a GNU `grep` PCRE. It
+reports each match as `line-number:name`. Repeated matches remain in the
+output, and each match keeps its source line number.
+
+The source assembles the PCRE from named boundary, long-name, and short-name
+parts. This expanded expression has the same behavior:
+
+```regex
+(?x)
+(?<![A-Za-z0-9_‐-])
+(?:
+  (?:--|‐‐)[A-Za-z0-9][A-Za-z0-9_-]*
+  |
+  (?:-|‐)[A-Za-z0-9?.:#@~]
+)
+(?=
+  $
+  | \s
+  | [\[\](){}<>=\x27\x22\x60]
+  | [,;:.!?](?=$|\s|[-‐\])}>\x27\x22\x60])
+  | [/|](?=[-‐])
+)
+```
+
+The escapes `\x27`, `\x22`, and `\x60` represent an apostrophe, a quotation
+mark, and a backtick.
+
+#### Name grammar
+
+| Form | Prefix | Name rule |
+| --- | --- | --- |
+| Short | `-` or `‐` | Exactly one character from `[A-Za-z0-9?.:#@~]` |
+| Long | `--` or `‐‐` | `[A-Za-z0-9][A-Za-z0-9_-]*` |
+
+The two U+2010 forms preserve compatibility with the earlier extractor. Mixed
+hyphen forms are not valid.
+
+The long-name rule permits ASCII letters, digits, hyphens, and underscores.
+The first name character must be an ASCII letter or digit.
+
+#### Left boundary
+
+The character before an option cannot be an ASCII letter, a digit, an
+underscore, an ASCII hyphen, or a U+2010 hyphen. This rule rejects matches in
+words and longer hyphen sequences.
+
+The start of a line is a valid left boundary. Other punctuation characters
+are also valid left boundaries.
+
+#### Right boundary
+
+One of these boundaries must follow the option name:
+
+- The end of the line or a whitespace character.
+- A square, round, curly, or angle bracket.
+- An equals sign, an apostrophe, a quotation mark, or a backtick.
+- Terminal punctuation: `,`, `;`, `:`, `.`, `!`, or `?`.
+- A slash or pipe before another hyphen-prefixed option.
+
+Terminal punctuation needs an additional boundary. The next character must
+be the line end, whitespace, a supported hyphen, a closing bracket, or a
+quote.
+
+These rules support aliases such as `-h/--help` and `-h|--help`. They reject a
+partial match from `--dotted.name`, `--name+value`, or `-I/usr/include`.
+
+#### Supported results
+
+| Help text | Extracted names |
+| --- | --- |
+| `--x` | `--x` |
+| `--3way` | `--3way` |
+| `--dry-run` | `--dry-run` |
+| `--foo_bar` | `--foo_bar` |
+| `--color=WHEN` | `--color` |
+| `--backup[=CONTROL]` | `--backup` |
+| `--file FILE` | `--file` |
+| `-a`, `-Z`, `-0` | `-a`, `-Z`, `-0` |
+| `-?`, `-.`, `-:`, `-#`, `-@`, `-~` | The same short names |
+| `-o=FILE` | `-o` |
+| `-F:` | `-F` |
+| `-h, --help` | `-h`, `--help` |
+| `[-h]` | `-h` |
+| `` `--help` `` | `--help` |
+
+`-F:` returns `-F` because the terminal colon is punctuation. The extractor
+does not return argument text.
+
+#### Unsupported results
+
+The default PCRE ignores these complete forms. It does not return a
+valid-looking prefix from them.
+
+| Category | Examples |
+| --- | --- |
+| Markers and incomplete names | `--`, `-`, `---help`, `word--option` |
+| Groups and multi-digit names | `-abc`, `-46Aa`, `-OO`, `-10` |
+| Attached values | `-j8`, `-A2`, `-DNAME`, `-I/usr/include` |
+| Single-hyphen long names | `-verbose`, `-name`, `-classpath` |
+| Other grammars | `-XX:+UseG1GC`, `+f`, `++foo`, `/help` |
+| Other dash characters | `—help`, `−h` |
+| Other name characters | `--log.level`, `--name+value`, `--naïve`, `-é` |
+| Text formatting | Names with ANSI escapes or line continuations |
+
+The PCRE does not decide if matched text declares an option. For example, it
+also matches `-1` in prose and `--help` in a URL path.
+
+The PCRE does not decide if an option accepts a value. It returns only the
+matched name.
+
+`-abc` has several possible meanings. It can be a group, a single-hyphen long
+name, or `-a` with an attached value. The default PCRE ignores this ambiguity.
+
+Set `CLI_OPTIONS_CMD` for Windows-style, Java-style, or application-specific
+option grammars. The custom command can use `$RE`, replace it, or use another
+parser.
+
+#### Changes from the earlier extractor
+
+| Input category | New result | Classification |
+| --- | --- | --- |
+| `[=VALUE]` long arguments | Return the name before `[` | Correction |
+| `=VALUE` long arguments | Return the name before `=` | Correction |
+| Numeric and supported punctuation short names | Return the complete name | Correction |
+| Groups and attached short values | Return no match | Intentional scope limit |
+| Single-hyphen long names | Return no match | Intentional scope limit |
+| Dotted, Unicode, and other long names | Return no match | Intentional scope limit |
 
 ### Help-message cache
 

@@ -1,0 +1,6 @@
+Find single-hyphen long name:
+  -name PATTERN           match a file name
+Java single-hyphen long name:
+  -classpath PATH         set the class path
+FFmpeg single-hyphen long name:
+  -version                show the version

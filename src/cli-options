@@ -27,20 +27,14 @@ parse_args() {
     done
 }
 
-# 2 different types of dashes, they look the same but have different key-codes
-# Detects long options: --foo
-PREFIX='(?:((?<=^)|(?<=[^\-]))(--|‐‐))'
-HEAD='a-zA-Z0-9\['
-MIDDLE='a-zA-Z0-9\[\]\-\=\.\,\%'
-TAIL='a-zA-Z0-9'
-LONG="$PREFIX([$HEAD](?:[$MIDDLE]*[$TAIL])?)"
+# Support the ASCII hyphen and U+2010 hyphen forms.
+LEFT_BOUNDARY='(?<![A-Za-z0-9_‐-])'
+LONG_OPTION='(?:--|‐‐)[A-Za-z0-9][A-Za-z0-9_-]*'
+SHORT_OPTION='(?:-|‐)[A-Za-z0-9?.:#@~]'
 
-# Detects short options: -f or -F
-PREFIX='(?:((?<=^)|(?<=[^\-\_a-zA-Z0-9]))(-|‐))'
-TAIL='([a-zA-Z]{1})'
-SHORT="$PREFIX$TAIL"
-
-RE="$LONG|$SHORT"
+# \x27, \x22, and \x60 are the apostrophe, quotation mark, and backtick.
+RIGHT_BOUNDARY='(?=$|\s|[\[\](){}<>=\x27\x22\x60]|[,;:.!?](?=$|\s|[-‐\])}>\x27\x22\x60])|[/|](?=[-‐]))'
+RE="$LEFT_BOUNDARY(?:$LONG_OPTION|$SHORT_OPTION)$RIGHT_BOUNDARY"
 
 # If on macOS check if GNU grep is installed as ggrep
 if [[ "$(uname)" == "Darwin" ]] && [[ "$(command -v ggrep 2>/dev/null)" ]]; then
