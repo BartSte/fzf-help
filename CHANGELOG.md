@@ -12,6 +12,12 @@ user. A change is always categorized based on the following types:
 
 If a change is breaking, this is mentioned and a major version is released.
 
+# 2.4.1
+
+## Task
+
+- The AUR release workflow now uses an existing deploy-action version.
+
 # 2.4.0
 
 ## Bug

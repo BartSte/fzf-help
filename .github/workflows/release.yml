@@ -17,7 +17,7 @@ jobs:
           deploy/make-pkgbuild "$GITHUB_REF_NAME" > PKGBUILD
 
       - name: Publish AUR package
-        uses: KSXGitHub/github-actions-deploy-aur@v4
+        uses: KSXGitHub/github-actions-deploy-aur@v4.2.0
         with:
           pkgname: fzf-help
           pkgbuild: ./PKGBUILD
