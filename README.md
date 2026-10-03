@@ -174,6 +174,11 @@ and the `--help` documentation in the preview window. You can press `ctrl-a`
 again to toggle the preview window to the bottom or the right of the widget.
 This is useful when you do not like page wrapping.
 
+The selector shows each option once. The preview opens at the option's
+definition when the help text makes it identifiable. Otherwise, it opens at
+the first mention of the option. You can still scroll through the full help
+message in the preview.
+
 ### Default option support
 
 The default extractor supports common Unix option names:
@@ -278,6 +283,14 @@ The following environment variables can be set to configure the behaviour of
 `src/cli-options` scans the complete help message with a GNU `grep` PCRE. It
 reports each match as `line-number:name`. Repeated matches remain in the
 output, and each match keeps its source line number.
+
+`src/fzf-select-option` shows one row for each extracted name. For each name,
+it scans the cached help message for a likely definition. It prefers a line
+that begins with the option or lists it after an alias. Indented text below
+the line or a spaced description on the same line makes a definition more
+likely. If the selector cannot identify a definition, it uses the first
+extracted match. This rule cannot identify every help format, and it can
+mistake a prose mention for a definition.
 
 The source assembles the PCRE from named boundary, long-name, and short-name
 parts. This expanded expression has the same behavior:

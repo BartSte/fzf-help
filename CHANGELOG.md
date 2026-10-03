@@ -12,6 +12,13 @@ user. A change is always categorized based on the following types:
 
 If a change is breaking, this is mentioned and a major version is released.
 
+# 2.5.0
+
+## Improvement
+
+- The selector now shows each option once and opens its definition in the
+  preview when it can identify the definition line.
+
 # 2.4.1
 
 ## Task

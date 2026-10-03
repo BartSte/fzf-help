@@ -30,6 +30,46 @@ teardown() {
     assert_output "$(cat_static fzf-select-option-mv.txt)"
 }
 
+@test "Shows each option once and previews its definition" {
+    local help input_list
+    help=$(static option-definitions-help.txt)
+    export HELP_MESSAGE_CMD="cat \"$help\""
+
+    run fzf-select-option -d example
+
+    assert_success
+    input_list=$(sed -n '/^stdin:$/,/^$/ { /^stdin:$/d; /^$/d; p; }' <<<"$output")
+    assert_equal "$input_list" $'--force\n--plain\n-f\n--orphan'
+    assert_output --partial $'3:--force\n6:--plain\n3:-f\n7:--orphan'
+}
+
+@test "Finds definitions that the option extractor missed" {
+    local input_list
+    export CLI_OPTIONS_CMD="cat >/dev/null; printf '%s\\n' '8:--backup' '22:--update'"
+
+    run fzf-select-option -d mv
+
+    assert_success
+    input_list=$(sed -n '/^stdin:$/,/^$/ { /^stdin:$/d; /^$/d; p; }' <<<"$output")
+    assert_equal "$input_list" $'--backup\n--update'
+    assert_output --partial $'7:--backup\n20:--update'
+}
+
+@test "Returns only the selected option name" {
+    local fzf_dir help
+    fzf_dir="$BATS_TEST_TMPDIR/fzf-bin"
+    help=$(static option-definitions-help.txt)
+    mkdir "$fzf_dir"
+    printf '%s\n' '#!/usr/bin/env bash' 'read -r selection' 'printf "%s\\n" "$selection"' > "$fzf_dir/fzf"
+    chmod +x "$fzf_dir/fzf"
+    export HELP_MESSAGE_CMD="cat \"$help\""
+
+    run env PATH="$fzf_dir:$PATH" fzf-select-option example
+
+    assert_success
+    assert_output '--force'
+}
+
 @test "Trims trailing whitespace from command input" {
     run fzf-select-option -d <<< $'mv \t'
 

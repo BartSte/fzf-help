@@ -117,6 +117,84 @@ get_options() {
     fi
 }
 
+select_definition_lines() {
+    local options=$1
+
+    if [[ -z $options ]]; then
+        return 0
+    fi
+
+    awk '
+        function definition_score(line_number, option, text, indent, position, prefix, suffix, after_option, next_line, next_text, next_indent, score) {
+            text = help_line[line_number]
+            sub(/^[[:space:]]*/, "", text)
+            indent = length(help_line[line_number]) - length(text)
+            position = index(text, option)
+            if (position == 0) return 0
+
+            prefix = substr(text, 1, position - 1)
+            suffix = substr(text, position + length(option), 1)
+            if (suffix != "" && index(" \t[=,/|:", suffix) == 0) return 0
+
+            if (position == 1) {
+                score = 1
+            } else if (prefix ~ /^[-‐][^[:space:],\/|]+[[:space:]]*[,\/|][[:space:]]*$/) {
+                score = 2
+            } else {
+                return 0
+            }
+
+            # Description layout gives stronger evidence than the option prefix alone.
+            after_option = substr(text, position + length(option))
+            if (after_option ~ /^(\[[^]]*\]|=[^[:space:]]+)/) score += 2
+            if (after_option ~ /^[[:space:]][[:space:]]+[^[:space:]]/ ||
+                after_option ~ /^(\[[^]]*\]|=[^[:space:]]+)[[:space:]][[:space:]]+[^[:space:]]/) score += 2
+
+            next_line = line_number + 1
+            while (next_line <= line_number + 3 && help_line[next_line] ~ /^[[:space:]]*$/) next_line++
+            next_text = help_line[next_line]
+            sub(/^[[:space:]]*/, "", next_text)
+            next_indent = length(help_line[next_line]) - length(next_text)
+            if (next_text != "" && next_indent > indent &&
+                (after_option == "" || after_option ~ /^(\[[^]]*\]|=[^[:space:]]+)[[:space:]]*$/)) score += 2
+
+            return score
+        }
+
+        FILENAME == ARGV[1] {
+            help_line[FNR] = $0
+            line_count = FNR
+            next
+        }
+
+        {
+            separator = index($0, ":")
+            if (separator == 0) next
+
+            line_number = substr($0, 1, separator - 1)
+            option = substr($0, separator + 1)
+            if (!(option in selected_line)) {
+                order[++count] = option
+                selected_line[option] = line_number
+            }
+        }
+
+        END {
+            for (i = 1; i <= count; i++) {
+                option = order[i]
+                for (line_number = 1; line_number <= line_count; line_number++) {
+                    score = definition_score(line_number, option)
+                    if (score > best_score[option]) {
+                        selected_line[option] = line_number
+                        best_score[option] = score
+                    }
+                }
+                print selected_line[option] ":" option
+            }
+        }
+    ' "$help_message" - <<<"$options"
+}
+
 shell_quote() {
     printf "'"
     printf '%s' "$1" | sed "s/'/'\\\\''/g"
@@ -197,5 +275,6 @@ dir=$(dirname "$(realpath "${BASH_SOURCE:-$0}")")
 help_message=$("$dir/make-temp" "fzf-help-message")
 trap 'rm -f "$help_message"' EXIT
 options=$(get_options)
+options=$(select_definition_lines "$options")
 preview_cmd=$(get_preview_cmd "$options")
 show_options "$options" "$preview_cmd"
