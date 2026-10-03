@@ -146,6 +146,7 @@ select_definition_lines() {
 
             # Description layout gives stronger evidence than the option prefix alone.
             after_option = substr(text, position + length(option))
+            if (after_option ~ /^(\[[^]]*\]|=[^[:space:]]+)/) score += 2
             if (after_option ~ /^[[:space:]][[:space:]]+[^[:space:]]/ ||
                 after_option ~ /^(\[[^]]*\]|=[^[:space:]]+)[[:space:]][[:space:]]+[^[:space:]]/) score += 2
 
@@ -154,13 +155,15 @@ select_definition_lines() {
             next_text = help_line[next_line]
             sub(/^[[:space:]]*/, "", next_text)
             next_indent = length(help_line[next_line]) - length(next_text)
-            if (suffix == "" && next_text != "" && next_indent > indent) score += 2
+            if (next_text != "" && next_indent > indent &&
+                (after_option == "" || after_option ~ /^(\[[^]]*\]|=[^[:space:]]+)[[:space:]]*$/)) score += 2
 
             return score
         }
 
         FILENAME == ARGV[1] {
             help_line[FNR] = $0
+            line_count = FNR
             next
         }
 
@@ -174,16 +177,18 @@ select_definition_lines() {
                 order[++count] = option
                 selected_line[option] = line_number
             }
-            score = definition_score(line_number, option)
-            if (score > best_score[option]) {
-                selected_line[option] = line_number
-                best_score[option] = score
-            }
         }
 
         END {
             for (i = 1; i <= count; i++) {
                 option = order[i]
+                for (line_number = 1; line_number <= line_count; line_number++) {
+                    score = definition_score(line_number, option)
+                    if (score > best_score[option]) {
+                        selected_line[option] = line_number
+                        best_score[option] = score
+                    }
+                }
                 print selected_line[option] ":" option
             }
         }

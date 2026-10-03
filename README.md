@@ -284,11 +284,12 @@ The following environment variables can be set to configure the behaviour of
 reports each match as `line-number:name`. Repeated matches remain in the
 output, and each match keeps its source line number.
 
-`src/fzf-select-option` uses these matches to show one row per option. It
-prefers a line that begins with the option or lists it after an alias. Indented
-text below the line or a spaced description on the same line makes a
-definition more likely. If the selector cannot identify a definition, it uses
-the first match. This rule cannot identify every help format, and it can
+`src/fzf-select-option` shows one row for each extracted name. For each name,
+it scans the cached help message for a likely definition. It prefers a line
+that begins with the option or lists it after an alias. Indented text below
+the line or a spaced description on the same line makes a definition more
+likely. If the selector cannot identify a definition, it uses the first
+extracted match. This rule cannot identify every help format, and it can
 mistake a prose mention for a definition.
 
 The source assembles the PCRE from named boundary, long-name, and short-name

@@ -43,6 +43,18 @@ teardown() {
     assert_output --partial $'3:--force\n6:--plain\n3:-f\n7:--orphan'
 }
 
+@test "Finds definitions that the option extractor missed" {
+    local input_list
+    export CLI_OPTIONS_CMD="cat >/dev/null; printf '%s\\n' '8:--backup' '22:--update'"
+
+    run fzf-select-option -d mv
+
+    assert_success
+    input_list=$(sed -n '/^stdin:$/,/^$/ { /^stdin:$/d; /^$/d; p; }' <<<"$output")
+    assert_equal "$input_list" $'--backup\n--update'
+    assert_output --partial $'7:--backup\n20:--update'
+}
+
 @test "Returns only the selected option name" {
     local fzf_dir help
     fzf_dir="$BATS_TEST_TMPDIR/fzf-bin"
