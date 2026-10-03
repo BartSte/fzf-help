@@ -1,0 +1,8 @@
+Usage: example [--force] [--plain]
+Use --force to override the check.
+  -f, --force
+      Override the check.
+--plain appears in this example.  A later line defines it.
+  --plain     Keep the default behavior.
+Use --orphan in an example.
+See --orphan in the guide.
